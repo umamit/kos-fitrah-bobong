@@ -169,7 +169,7 @@ Estimasi Biaya Sewa:
 
 Apakah unit kamar tipe tersebut masih tersedia untuk rencana tanggal masuk saya? Terima kasih.`;
 
-    // Target phone number (Bapak Fitrah) - placeholder as approved
+    // Target phone number (Ona) - placeholder as approved
     const phoneNumber = '6281357001357';
     const encodedMessage = encodeURIComponent(whatsappMessage);
     const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
