@@ -504,38 +504,58 @@
           <span>Bobong, Taliabu Barat</span>
         </div>
         <div class="map-body">
-          <!-- Custom SVG Map layout for a neat artisanal look -->
+          <!-- Custom SVG Map layout for a neat artisanal look matching Google Maps satellite junction -->
           <svg viewBox="0 0 400 250" class="custom-route-map">
             <!-- Background grids/roads -->
             <rect width="400" height="250" fill="var(--bg-card)" rx="12" />
             
-            <!-- Jalan Utama -->
-            <path d="M 10 90 L 390 90" stroke="var(--border)" stroke-width="20" stroke-linecap="round" />
-            <text x="30" y="95" fill="var(--text-muted)" font-size="10" font-weight="600">JL. PROVINSI (UTAMA)</text>
-            
-            <!-- Jalan Cabang -->
-            <path d="M 220 90 L 220 230" stroke="var(--border)" stroke-width="16" stroke-linecap="round" />
-            <text x="235" y="160" fill="var(--text-muted)" font-size="10" font-weight="600" transform="rotate(90 235 160)">JL. KOS FITRAH</text>
+            <!-- Other buildings (Surrounding neighborhood for context) -->
+            <!-- Top blue roof house -->
+            <polygon points="120,40 140,25 160,40 150,60 130,55" fill="#3b82f6" opacity="0.85" />
+            <polygon points="120,40 160,40 140,25" fill="#2563eb" opacity="0.9" />
 
-            <!-- Bupati Office Landmark -->
-            <rect x="50" y="120" width="110" height="60" rx="8" fill="var(--bg-muted)" stroke="var(--border)" stroke-width="2" />
-            <text x="65" y="145" fill="var(--text)" font-size="11" font-weight="700">Kawasan Kantor</text>
-            <text x="65" y="160" fill="var(--text)" font-size="11" font-weight="700">Bupati Taliabu</text>
+            <!-- Bottom red roof house -->
+            <polygon points="180,210 220,210 200,195" fill="#ef4444" opacity="0.85" />
+            <rect x="180" y="210" width="40" height="25" fill="var(--bg-muted)" stroke="var(--border)" stroke-width="1" />
             
-            <!-- Pertigaan dot/landmark -->
-            <circle cx="220" cy="90" r="6" fill="var(--primary)" />
+            <!-- East brown roof house -->
+            <rect x="290" y="140" width="45" height="35" rx="4" fill="#b45309" opacity="0.8" />
             
-            <!-- Kos Fitrah Location -->
-            <g transform="translate(220, 190)">
-              <rect x="25" y="-20" width="110" height="45" rx="8" fill="var(--primary-light)" stroke="var(--primary)" stroke-width="2" />
-              <text x="35" y="-2" fill="var(--primary)" font-size="12" font-weight="800">KOS FITRAH</text>
-              <circle cx="0" cy="0" r="10" fill="var(--primary)" />
-              <circle cx="0" cy="0" r="4" fill="#ffffff" />
+            <!-- Roads matching the satellite view intersection -->
+            <!-- Main Diagonal Road 1 (Top-Left to Bottom-Right) -->
+            <path d="M -10,60 L 410,230" stroke="var(--border)" stroke-width="24" stroke-linecap="round" />
+            <path d="M -10,60 L 410,230" stroke="var(--bg-primary)" stroke-width="2" stroke-dasharray="8 8" />
+            
+            <!-- Secondary Road 2 (Bottom-Left to Top-Right) -->
+            <path d="M 80,-10 L 320,260" stroke="var(--border)" stroke-width="20" stroke-linecap="round" />
+            <path d="M 80,-10 L 320,260" stroke="var(--bg-primary)" stroke-width="2" stroke-dasharray="6 6" />
+
+            <!-- Main Building: Kos Fitrah (L-shape blue roof on the west corner) -->
+            <g transform="translate(100, 100)">
+              <polygon points="0,0 60,30 30,80 -10,60" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2" />
+              <polygon points="0,0 60,30 25,48" fill="#1e40af" />
+              <polygon points="0,0 25,48 -10,60" fill="#2563eb" />
+            </g>
+
+            <!-- Google Map Pin Style (Pink circle with bed symbol) -->
+            <g transform="translate(165, 125)">
+              <!-- Pulse effect -->
+              <circle cx="0" cy="0" r="18" fill="#f43f5e" opacity="0.2">
+                <animate attributeName="r" values="14;22;14" dur="2.5s" repeatCount="indefinite" />
+              </circle>
+              <!-- Pin base -->
+              <circle cx="0" cy="0" r="13" fill="#f43f5e" />
+              <!-- Bed Icon (white) -->
+              <path d="M-6,-3 L-6,4 M-6,0 L5,0 M5,-1 L5,4 M-4,-1 L-1,-1 L-1,0 L-4,0 Z" stroke="#ffffff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <!-- Text Label -->
+              <rect x="18" y="-18" width="90" height="32" rx="6" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1.5" />
+              <text x="24" y="-4" fill="var(--text)" font-size="9" font-weight="800">KOS FITRAH</text>
+              <text x="24" y="8" fill="var(--text-muted)" font-size="8" font-weight="600">Baru dilihat</text>
             </g>
           </svg>
           <div class="map-notes">
             <span class="landmark-bullet"></span>
-            <p><strong>Panduan Singkat:</strong> Dari jalan utama Provinsi arah perkantoran bupati, belok kanan di pertigaan Jl. Kos Fitrah. Jarak kos sekitar 100 meter di sebelah kanan jalan.</p>
+            <p><strong>Panduan Rute:</strong> Kos Fitrah terletak persis di sudut perempatan jalan strategis di kawasan Bobong. Bangunan dua lantai beratap biru yang kokoh sangat mudah dikenali langsung dari tepi perempatan.</p>
           </div>
         </div>
       </div>
