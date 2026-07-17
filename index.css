@@ -841,9 +841,10 @@ input:focus, select:focus {
 
 .custom-route-map {
   width: 100%;
-  height: auto;
+  height: 250px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
+  display: block;
 }
 
 /* Map Route colors */
