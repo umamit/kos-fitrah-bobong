@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
       deposit: 200000
     },
     vip: {
-      month: 1300000,
-      year: 14300000,
+      month: 1000000,
+      year: 11000000,
       deposit: 500000
     }
   };
