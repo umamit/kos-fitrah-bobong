@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://kosfitrah.uk/</loc>
-    <lastmod>2026-07-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://kosfitrah.uk/assets/hero.jpg</image:loc>
+      <image:title>Eksterior Gedung Kos Fitrah Bobong Taliabu</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://kosfitrah.uk/assets/room_basic.jpg</image:loc>
+      <image:title>Kamar Standard Lite Basic Kos Fitrah</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://kosfitrah.uk/assets/room_comfort.jpg</image:loc>
+      <image:title>Kamar Eco Comfort Standard Plus Kos Fitrah</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://kosfitrah.uk/assets/room_standard.jpg</image:loc>
+      <image:title>Kamar Eco Breeze Standard Premium Kos Fitrah</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://kosfitrah.uk/assets/room_vip.jpg</image:loc>
+      <image:title>Kamar Executive VIP AC Kos Fitrah</image:title>
+    </image:image>
   </url>
 </urlset>
