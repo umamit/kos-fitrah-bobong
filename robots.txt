@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sampaikan lokasi sitemap ke mesin pencari
-Sitemap: https://kos-fitrah-bobong.vercel.app/sitemap.xml
+Sitemap: https://kosfitrah.uk/sitemap.xml
