@@ -43,30 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const entryDateInput = document.getElementById('tanggal-masuk');
 
   const summaryUnitPrice = document.getElementById('summary-unit-price');
-  const summaryDeposit = document.getElementById('summary-deposit');
   const summaryTotal = document.getElementById('summary-total');
 
-  // Prices and Deposits configurations
+  // Prices configurations (No deposit)
   const pricingData = {
     basic: {
       month: 600000,
-      year: 6600000,
-      deposit: 200000
+      year: 6600000
     },
     comfort: {
       month: 700000,
-      year: 7700000,
-      deposit: 200000
+      year: 7700000
     },
     breeze: {
       month: 750000,
-      year: 8250000,
-      deposit: 200000
+      year: 8250000
     },
     vip: {
       month: 1000000,
-      year: 11000000,
-      deposit: 500000
+      year: 11000000
     }
   };
 
@@ -86,14 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectedPricing = pricingData[roomType];
     const unitPrice = rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year;
-    const deposit = selectedPricing.deposit;
 
-    const rentCost = unitPrice * duration;
-    const totalCost = rentCost + deposit;
+    const totalCost = unitPrice * duration;
 
     // Update UI elements
     summaryUnitPrice.textContent = `${formatRupiah(unitPrice)} / ${rentCycle}`;
-    summaryDeposit.textContent = formatRupiah(deposit);
     summaryTotal.textContent = formatRupiah(totalCost);
   }
 
@@ -148,8 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const selectedPricing = pricingData[roomType];
     const unitPrice = rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year;
-    const deposit = selectedPricing.deposit;
-    const totalCost = (unitPrice * duration) + deposit;
+    const totalCost = unitPrice * duration;
 
     let formattedRoom = '';
     if (roomType === 'basic') formattedRoom = 'Standard Lite (Basic)';
@@ -173,10 +164,8 @@ Saya ingin mengajukan pemesanan kamar kos dengan detail berikut:
 • Durasi Sewa: ${duration} ${formattedCycle}
 • Rencana Masuk: ${formattedDate}
 
-Estimasi Biaya Awal:
-• Sewa Unit: ${formatRupiah(unitPrice * duration)} (${duration} ${formattedCycle})
-• Uang Jaminan (Deposit): ${formatRupiah(deposit)}
-• Total Tagihan Awal: ${formatRupiah(totalCost)}
+Estimasi Biaya Sewa:
+• Total Biaya Sewa: ${formatRupiah(totalCost)} (${duration} ${formattedCycle})
 
 Apakah unit kamar tipe tersebut masih tersedia untuk rencana tanggal masuk saya? Terima kasih.`;
 
