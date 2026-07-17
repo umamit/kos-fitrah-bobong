@@ -48,15 +48,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Prices and Deposits configurations
   const pricingData = {
-    vip: {
-      month: 1500000,
-      year: 16500000,
-      deposit: 500000
+    basic: {
+      month: 600000,
+      year: 6600000,
+      deposit: 200000
     },
-    standard: {
-      month: 800000,
-      year: 8800000,
-      deposit: 300000
+    comfort: {
+      month: 700000,
+      year: 7700000,
+      deposit: 200000
+    },
+    breeze: {
+      month: 750000,
+      year: 8250000,
+      deposit: 200000
+    },
+    vip: {
+      month: 1300000,
+      year: 14300000,
+      deposit: 500000
     }
   };
 
@@ -141,7 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const deposit = selectedPricing.deposit;
     const totalCost = (unitPrice * duration) + deposit;
 
-    const formattedRoom = roomType === 'vip' ? 'VIP (Kamar AC)' : 'Standard (Kipas)';
+    let formattedRoom = '';
+    if (roomType === 'basic') formattedRoom = 'Standard Lite (Basic)';
+    else if (roomType === 'comfort') formattedRoom = 'Eco Comfort (Standard Plus)';
+    else if (roomType === 'breeze') formattedRoom = 'Eco Breeze (Standard Premium)';
+    else if (roomType === 'vip') formattedRoom = 'Executive VIP (Deluxe AC)';
     const formattedCycle = rentCycle === 'bulan' ? 'Bulan' : 'Tahun';
     const formattedDate = new Date(entryDate).toLocaleDateString('id-ID', {
       weekday: 'long',
