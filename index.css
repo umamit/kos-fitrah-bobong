@@ -221,26 +221,71 @@ p {
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  text-decoration: none;
 }
 
 .nav-logo {
-  height: 38px;
+  height: 32px;
   width: auto;
   display: block;
   transition: filter var(--transition-normal);
 }
 
-.footer-logo {
-  height: 48px;
-  width: auto;
-  display: block;
+.nav-brand-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.nav-brand-text .dot {
+  color: var(--primary);
+}
+
+/* Footer brand elements */
+.footer-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 16px;
+}
+
+.footer-logo-symbol {
+  height: 36px;
+  width: auto;
+  display: block;
   transition: filter var(--transition-normal);
 }
 
+.footer-brand-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.footer-brand-text .dot {
+  color: var(--primary);
+}
+
+/* Hero Logo positioning */
+.hero-brand-logo {
+  margin-bottom: 20px;
+}
+
+.hero-logo {
+  height: 90px;
+  width: auto;
+  display: block;
+  transition: filter var(--transition-normal);
+}
+
+/* Dark mode filters */
 [data-theme="dark"] .nav-logo,
-[data-theme="dark"] .footer-logo {
+[data-theme="dark"] .footer-logo-symbol,
+[data-theme="dark"] .hero-logo {
   filter: brightness(0) invert(1);
 }
 
