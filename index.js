@@ -48,18 +48,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Prices configurations (No deposit)
   const pricingData = {
     basic: {
+      day: 50000,
       month: 600000,
       year: 6600000
     },
     comfort: {
+      day: 60000,
       month: 700000,
       year: 7700000
     },
     breeze: {
+      day: 70000,
       month: 750000,
       year: 8250000
     },
     vip: {
+      day: 120000,
       month: 1000000,
       year: 11000000
     }
@@ -76,11 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function calculateCosts() {
     const roomType = roomSelect.value;
-    const rentCycle = cycleSelect.value; // 'bulan' or 'tahun'
+    const rentCycle = cycleSelect.value; // 'hari', 'bulan', or 'tahun'
     const duration = parseInt(durationInput.value) || 1;
 
     const selectedPricing = pricingData[roomType];
-    const unitPrice = rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year;
+    const unitPrice = rentCycle === 'hari' ? selectedPricing.day : (rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year);
 
     const totalCost = unitPrice * duration;
 
@@ -92,10 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event Listeners for interactive calculator updates
   roomSelect.addEventListener('change', calculateCosts);
   cycleSelect.addEventListener('change', () => {
-    // Modify labels based on cycle selection
+    // Modify label of duration dynamically based on selected cycle
+    const durationLabel = document.querySelector('label[for="durasi"]');
     if (cycleSelect.value === 'tahun') {
-      durationInput.setAttribute('min', '1');
-      if (durationInput.value === '0') durationInput.value = '1';
+      durationLabel.textContent = 'Durasi Sewa (Tahun)';
+    } else if (cycleSelect.value === 'hari') {
+      durationLabel.textContent = 'Durasi Sewa (Hari)';
+    } else {
+      durationLabel.textContent = 'Durasi Sewa (Bulan)';
     }
     calculateCosts();
   });
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const entryDate = entryDateInput.value;
 
     const selectedPricing = pricingData[roomType];
-    const unitPrice = rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year;
+    const unitPrice = rentCycle === 'hari' ? selectedPricing.day : (rentCycle === 'bulan' ? selectedPricing.month : selectedPricing.year);
     const totalCost = unitPrice * duration;
 
     let formattedRoom = '';
@@ -147,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (roomType === 'comfort') formattedRoom = 'Eco Comfort (Standard Plus)';
     else if (roomType === 'breeze') formattedRoom = 'Eco Breeze (Standard Premium)';
     else if (roomType === 'vip') formattedRoom = 'Executive VIP (Deluxe AC)';
-    const formattedCycle = rentCycle === 'bulan' ? 'Bulan' : 'Tahun';
+    const formattedCycle = rentCycle === 'hari' ? 'Hari' : (rentCycle === 'bulan' ? 'Bulan' : 'Tahun');
     const formattedDate = new Date(entryDate).toLocaleDateString('id-ID', {
       weekday: 'long',
       year: 'numeric',
