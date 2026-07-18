@@ -563,36 +563,46 @@ p {
 .kamar-price-box {
   background-color: var(--bg-muted);
   border-radius: var(--radius-md);
-  padding: 16px 12px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 28px;
   border: 1px dashed var(--border);
 }
 
 .price-item {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+
+.price-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .price-label {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 4px;
 }
 
 .price-value {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--text);
+  white-space: nowrap;
 }
 
 .price-unit {
-  font-size: 0.75rem;
-  font-weight: 400;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .kamar-disclaimer {
@@ -1125,12 +1135,6 @@ input:focus, select:focus {
   
   .calculator-card {
     padding: 24px;
-  }
-  
-  .kamar-price-box {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 16px;
   }
 
   .nav-cta-btn {
