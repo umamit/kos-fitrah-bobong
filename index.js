@@ -48,22 +48,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // Prices configurations (No deposit)
   const pricingData = {
     basic: {
-      day: 50000,
+      day: 100000,
       month: 600000,
       year: 6600000
     },
     comfort: {
-      day: 60000,
+      day: 100000,
       month: 700000,
       year: 7700000
     },
     breeze: {
-      day: 70000,
+      day: 100000,
       month: 750000,
       year: 8250000
     },
     vip: {
-      day: 120000,
+      day: 150000,
       month: 1000000,
       year: 11000000
     }
