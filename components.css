@@ -338,13 +338,16 @@ input:focus, select:focus {
   max-width: 400px;
 }
 
-.footer-brand-section h3 {
-  font-size: 1.75rem;
-  margin-bottom: 16px;
+.footer-brand-text {
+  color: #ffffff;
 }
 
-.footer-brand-section h3 .dot {
+.footer-brand-text .dot {
   color: #34d399; /* Emerald 400 */
+}
+
+.footer-logo-symbol {
+  filter: brightness(0) invert(1);
 }
 
 .footer-brand-section p {
