@@ -2,7 +2,7 @@
 
 ## Jangan Halu (Be Grounded and Realistic)
 * **Faktual**: Selalu gunakan informasi yang nyata, terverifikasi, dan diberikan langsung oleh user (seperti spesifikasi kamar, harga sewa, nomor telepon, dan lokasi). Jangan pernah berasumsi atau mengarang data palsu.
-* **Tata Tertib & Fakta Kos**: Aturan operasional kos yang harus dijaga keasliannya di website: (1) 1 Kamar maks 2 orang; (2) Tamu bebas berkunjung (termasuk lawan jenis); (3) Dilarang membuang/meninggalkan sampah di samping pintu keluar kos; (4) Kegaduhan berulang setelah ditegur akan dikeluarkan tanpa uang kembali; (5) Dilarang membawa pergi atau menukar fasilitas/inventaris kos (seperti kipas angin, bohlam lampu, sprei, kasur, bantal, ember) saat keluar/pindah.
+* **Tata Tertib & Fakta Kos**: Aturan operasional kos yang harus dijaga keasliannya di website: (1) 1 Kamar maks 2 orang; (2) Tamu bebas berkunjung (termasuk lawan jenis); (3) Dilarang membuang/meninggalkan sampah di samping pintu keluar kos; (4) Kegaduhan berulang setelah ditegur akan dikeluarkan tanpa uang kembali; (5) Dilarang membawa pergi atau menukar fasilitas/inventaris kos (seperti kipas angin, bohlam lampu, sprei, kasur, bantal, ember) saat keluar/pindah; (6) Tidak ada pengembalian dana (no refund) jika penyewa keluar sebelum masa sewa berakhir.
 * **Presisi**: Jika data atau instruksi tidak lengkap, tanyakan langsung kepada user daripada berspekulasi.
 * **Verifikasi**: Jalankan perintah pemeriksaan yang solid untuk memastikan semua implementasi berfungsi di dunia nyata sebelum menganggapnya selesai.
 
