@@ -15,3 +15,13 @@
 * **Presisi Pemotongan (Cropping)**: Lakukan pemotongan (cropping) gambar logo secara ketat mengikuti batas piksel konten asli (bounding box). Pastikan ornamen di luar logo (seperti pita samping pada gambar mentah) dan teks di luar area simbol tidak ikut terpotong sebagian atau terbawa masuk.
 * **Cache-Busting Wajib**: Setiap kali mengubah file gambar (logo, favicon), stylesheet (CSS), atau skrip logika (JS), versi parameter di file HTML wajib dinaikkan ke nomor versi baru yang unik/belum pernah digunakan (misal: `index.js?v=1.0.6` menjadi `index.js?v=1.0.7`). Jangan pernah menggunakan kembali nomor versi cache-busting yang sudah ada setelah file diubah, karena peramban klien/Cloudflare akan mengabaikan pembaruan tersebut.
 
+## Kualitas Kode CSS & JS
+* **Batas Panjang File**: Setiap file kode (HTML, CSS, JS) tidak boleh melebihi **800 baris**. Jika mendekati atau melampaui batas ini, pecah file menjadi modul yang lebih kecil dan terfokus.
+* **Struktur CSS Modular**: CSS website ini dibagi ke dalam tiga file dengan peran yang jelas — jangan menggabungkannya kembali menjadi satu file monolitik:
+  * `base.css` — Variabel global, reset CSS, tipografi, komponen dasar (tombol, navbar, layout umum).
+  * `sections.css` — Gaya tiap seksi utama halaman (Hero, Kamar, Spesifikasi, Tata Tertib).
+  * `components.css` — Komponen interaktif (FAQ accordion, kalkulator, peta kontak, footer) dan semua media query responsif.
+* **Don't Repeat Yourself (DRY)**: Gunakan CSS Custom Properties (`--nama-variabel`) untuk warna, shadow, radius, dan transisi. Jangan menulis nilai statis (seperti warna hex) berulang di berbagai selector jika sudah tersedia sebagai variabel.
+* **Vanilla JS Only**: Website ini menggunakan HTML, CSS, dan JS murni. Jangan menambahkan framework atau library eksternal (Tailwind, Bootstrap, React, Vue, dll.) yang membebani ukuran file dan performa.
+
+
