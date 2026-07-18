@@ -1132,4 +1132,37 @@ input:focus, select:focus {
     gap: 12px;
     padding: 16px;
   }
+
+  .nav-cta-btn {
+    display: none;
+  }
+
+  .kamar-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .specs-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .form-row .form-group {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .rule-item {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-brand-text {
+    font-size: 1.15rem;
+  }
+  .section-container {
+    padding: 48px 16px;
+  }
 }
