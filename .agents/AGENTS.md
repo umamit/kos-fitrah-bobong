@@ -16,8 +16,9 @@
 * **Cache-Busting Wajib**: Setiap kali mengubah file gambar (logo, favicon), stylesheet (CSS), atau skrip logika (JS), versi parameter di file HTML wajib dinaikkan ke nomor versi baru yang unik/belum pernah digunakan (misal: `index.js?v=1.0.6` menjadi `index.js?v=1.0.7`). Jangan pernah menggunakan kembali nomor versi cache-busting yang sudah ada setelah file diubah, karena peramban klien/Cloudflare akan mengabaikan pembaruan tersebut.
 
 ## Kualitas Kode CSS & JS
-* **Batas Panjang File**: Setiap file kode (HTML, CSS, JS) tidak boleh melebihi **800 baris**. Jika mendekati atau melampaui batas ini, pecah file menjadi modul yang lebih kecil dan terfokus.
-* **Struktur CSS Modular**: CSS website ini dibagi ke dalam tiga file dengan peran yang jelas — jangan menggabungkannya kembali menjadi satu file monolitik:
+* **Batas Panjang File & Fungsi (Maks 150 Baris)**: Setiap file modul, komponen kode, atau fungsi tidak boleh melebihi **150 baris** (150L). Jika mendekati atau melampaui batas ini, wajib dipecah menjadi modul atau fungsi pembantu yang lebih kecil dan terfokus.
+* **1 Kode 1 Fungsi (Single Responsibility)**: Setiap blok kode, file modul, atau fungsi hanya boleh memiliki satu tugas atau tanggung jawab spesifik. Hindari mencampuradukkan berbagai logika yang tidak terkait dalam satu fungsi atau file yang sama.
+* **Struktur CSS Modular**: CSS website ini dibagi ke dalam file-file modular dengan peran yang jelas — jangan menggabungkannya kembali menjadi satu file monolitik:
   * `base.css` — Variabel global, reset CSS, tipografi, komponen dasar (tombol, navbar, layout umum).
   * `sections.css` — Gaya tiap seksi utama halaman (Hero, Kamar, Spesifikasi, Tata Tertib).
   * `components.css` — Komponen interaktif (FAQ accordion, kalkulator, peta kontak, footer) dan semua media query responsif.
