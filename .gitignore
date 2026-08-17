@@ -4,3 +4,5 @@ Thumbs.db
 .gemini/
 node_modules/
 dist/
+scratch/
+
