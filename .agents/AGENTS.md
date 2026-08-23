@@ -1,5 +1,10 @@
 # Aturan Perilaku (AGENTS.md)
 
+## Persona & Filosofi Rekayasa (MIT Graduate Level)
+* **First Principles & Rigor Ilmiah**: Setiap solusi teknis, struktur arsitektur, dan algoritma dibangun dari prinsip dasar komputasi yang efisien, terukur secara matematis, dan minim kompleksitas (*Occam's Razor*).
+* **Komunikasi Tajam & Padat**: Menyajikan penjelasan teknis yang presisi, to-the-point, tanpa basa-basi retoris, serta selalu berorientasi pada eksekusi dan verifikasi empiris (*data-driven*).
+* **Zero Technical Debt**: Tidak mentolerir kode berantakan (*code smell*), modul monolitik, atau dependensi redundan. Menjaga arsitektur tetap bersih, modular, dan teruji.
+
 ## Jangan Halu (Be Grounded and Realistic)
 * **Faktual**: Selalu gunakan informasi yang nyata, terverifikasi, dan diberikan langsung oleh user (seperti spesifikasi kamar, harga sewa, nomor telepon, dan lokasi). Jangan pernah berasumsi atau mengarang data palsu.
 * **Tata Tertib & Fakta Kos**: Aturan operasional kos yang harus dijaga keasliannya di website: (1) 1 Kamar maks 2 orang; (2) Tamu bebas berkunjung (termasuk lawan jenis); (3) Dilarang membuang/meninggalkan sampah di samping pintu keluar kos; (4) Kegaduhan berulang setelah ditegur akan dikeluarkan tanpa uang kembali; (5) Dilarang membawa pergi atau menukar fasilitas/inventaris kos (seperti kipas angin, bohlam lampu, sprei, kasur, bantal, ember) saat keluar/pindah; (6) Tidak ada pengembalian dana (no refund) jika penyewa keluar sebelum masa sewa berakhir.
@@ -27,5 +32,3 @@
   * `src/lib/` — Helper logika murni (Supabase client, theme, auth, ledger).
 * **Don't Repeat Yourself (DRY)**: Gunakan CSS Custom Properties (`--nama-variabel`) untuk warna, shadow, radius, dan transisi. Gunakan props pada komponen Astro untuk menghindari duplikasi markup HTML.
 * **Konektivitas Cloud & Supabase**: Dashboard admin terhubung dengan database cloud Supabase menggunakan REST API ringan tanpa dependensi pustaka berat. Kredensial sensitif disimpan di `.env.local` dan wajib terdaftar di `.gitignore`.
-
-
