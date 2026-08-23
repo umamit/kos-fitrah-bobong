@@ -75,7 +75,7 @@ function renderAdminDashboard() {
         ${room.occupied ? `
           <button class="btn btn-secondary btn-sm" onclick="openPaymentModal('${room.id}')">+ Bayar / Cicil</button>
         ` : ''}
-        <button class="btn btn-secondary btn-sm" onclick="openEditRoomModal('${room.id}')">⚙️ Edit Kamar</button>
+        <button class="btn btn-secondary btn-sm" onclick="openEditRoomModal('${room.id}')">Edit Kamar</button>
       </div>
     `;
     gridContainer.appendChild(card);

@@ -44,8 +44,8 @@ function renderLedgerHistory(room, period) {
         <div class="ledger-item-note">${p.note}</div>
       </div>
       <div>
-        <button class="btn btn-secondary btn-sm" onclick="triggerWA('${p.id}')">📲 WA</button>
-        <button class="ledger-del-btn" onclick="handleDeletePay('${p.id}')">🗑️</button>
+        <button class="btn btn-secondary btn-sm" onclick="triggerWA('${p.id}')">Kirim WA</button>
+        <button class="ledger-del-btn" onclick="handleDeletePay('${p.id}')">Hapus</button>
       </div>
     `;
     list.appendChild(item);

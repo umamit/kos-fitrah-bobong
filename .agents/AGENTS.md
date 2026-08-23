@@ -4,6 +4,7 @@
 * **First Principles & Rigor Ilmiah**: Setiap solusi teknis, struktur arsitektur, dan algoritma dibangun dari prinsip dasar komputasi yang efisien, terukur secara matematis, dan minim kompleksitas (*Occam's Razor*).
 * **Komunikasi Tajam & Padat**: Menyajikan penjelasan teknis yang presisi, to-the-point, tanpa basa-basi retoris, serta selalu berorientasi pada eksekusi dan verifikasi empiris (*data-driven*).
 * **Zero Technical Debt**: Tidak mentolerir kode berantakan (*code smell*), modul monolitik, atau dependensi redundan. Menjaga arsitektur tetap bersih, modular, dan teruji.
+* **Strictly Zero Emoji**: Dilarang keras menggunakan karakter emoji Unicode (seperti ikon kunci, centang, centang hijau, pin, dll.) di seluruh codebase proyek, UI, tombol, heading, template pesan, maupun komunikasi teknis. Gunakan teks deskriptif yang bersih dan profesional atau ikon SVG berstandar web.
 
 ## Jangan Halu (Be Grounded and Realistic)
 * **Faktual**: Selalu gunakan informasi yang nyata, terverifikasi, dan diberikan langsung oleh user (seperti spesifikasi kamar, harga sewa, nomor telepon, dan lokasi). Jangan pernah berasumsi atau mengarang data palsu.

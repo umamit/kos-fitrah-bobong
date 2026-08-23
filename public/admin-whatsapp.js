@@ -14,14 +14,14 @@ function sendWhatsAppReceipt(room, payment, totalPaid, targetRate, period) {
   }
 
   const sisa = Math.max(0, targetRate - totalPaid);
-  const statusStr = sisa === 0 ? 'LUNAS ✅' : `BELUM LUNAS (Sisa: ${formatCurrency(sisa)}) ⏳`;
+  const statusStr = sisa === 0 ? 'LUNAS' : `BELUM LUNAS (Sisa: ${formatCurrency(sisa)})`;
   
   // Format period into Indonesian month name
   const [year, month] = period.split('-');
   const dateObj = new Date(year, parseInt(month) - 1, 1);
   const periodStr = dateObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
 
-  const message = `*KWITANSI PEMBAYARAN KOS FITRAH* 🏠
+  const message = `*KWITANSI PEMBAYARAN KOS FITRAH*
 ============================
 Kepada Yth: *${room.tenant}*
 Kamar: *No. ${room.id}*
