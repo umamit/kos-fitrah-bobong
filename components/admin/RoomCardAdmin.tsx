@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Settings, User, PhoneCall, Calendar, AlertTriangle } from "lucide-react";
+import { Plus, Settings, User, PhoneCall, Calendar, AlertTriangle, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,7 @@ export interface RoomAdminData {
   rate: number;
   dueDay: number;
   occupied: boolean;
-  debt?: number; // Tunggakan bulan-bulan sebelumnya
+  debt?: number;
 }
 
 export function RoomCardAdmin({
@@ -32,6 +32,10 @@ export function RoomCardAdmin({
   const totalTarget = room.rate + debtVal;
   const rem = Math.max(0, totalTarget - paid);
   const percent = room.occupied ? Math.min(100, Math.round((paid / totalTarget) * 100)) : 0;
+
+  // Cek apakah tanggal hari ini sudah melewati tanggal jatuh tempo penyewa
+  const today = new Date().getDate();
+  const isOverdue = room.occupied && (paid < totalTarget) && (today > room.dueDay);
   
   let statusText = "KOSONG";
   let statusVariant: "success" | "warning" | "danger" | "muted" = "muted";
@@ -40,6 +44,9 @@ export function RoomCardAdmin({
     if (paid >= totalTarget) {
       statusText = "Lunas";
       statusVariant = "success";
+    } else if (isOverdue) {
+      statusText = "Menunggak";
+      statusVariant = "danger";
     } else if (paid > 0) {
       statusText = `Dicicil (${percent}%)`;
       statusVariant = "warning";
@@ -55,7 +62,7 @@ export function RoomCardAdmin({
         {/* Card Header */}
         <div className="flex justify-between items-center pb-3 border-b border-border/60">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+            <span className={`w-2.5 h-2.5 rounded-full ${isOverdue ? "bg-red-500 animate-pulse" : "bg-primary"}`} />
             <span className="text-base font-extrabold text-foreground tracking-tight">Kamar {room.id}</span>
           </div>
           <Badge variant={statusVariant}>{statusText}</Badge>
@@ -78,9 +85,19 @@ export function RoomCardAdmin({
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" />
-                <span>Jatuh tempo tgl <strong>{room.dueDay}</strong> • {formatCurrency(room.rate)}/bln</span>
+                <span className={isOverdue ? "text-red-500 font-bold" : ""}>
+                  Jatuh tempo tgl <strong>{room.dueDay}</strong> • {formatCurrency(room.rate)}/bln
+                </span>
               </div>
-              {debtVal > 0 && (
+              
+              {isOverdue && (
+                <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-950/30 px-2.5 py-1.5 rounded-md border border-red-200/50">
+                  <AlertCircle className="w-3.5 h-3.5 animate-bounce" />
+                  <span>Lewat Jatuh Tempo!</span>
+                </div>
+              )}
+
+              {debtVal > 0 && !isOverdue && (
                 <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200/50">
                   <AlertTriangle className="w-3.5 h-3.5" />
                   <span>Ada Tunggakan: {formatCurrency(debtVal)}</span>
@@ -99,7 +116,7 @@ export function RoomCardAdmin({
               <span className="text-emerald-600 dark:text-emerald-400">Masuk: {formatCurrency(paid)}</span>
               <span className="text-muted-foreground">Sisa: {formatCurrency(rem)}</span>
             </div>
-            <Progress value={percent} variant={percent < 100 && percent > 0 ? "warning" : "default"} />
+            <Progress value={percent} variant={isOverdue ? "danger" : percent < 100 && percent > 0 ? "warning" : "default"} />
           </div>
         )}
       </div>

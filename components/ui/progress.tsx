@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: number;
-  variant?: "default" | "warning";
+  variant?: "default" | "warning" | "danger";
 }
 
 export function Progress({ className, value = 0, variant = "default", ...props }: ProgressProps) {
@@ -19,6 +19,8 @@ export function Progress({ className, value = 0, variant = "default", ...props }
           "h-full w-full flex-1 transition-all duration-500 rounded-full",
           variant === "warning"
             ? "bg-gradient-to-r from-amber-400 to-amber-500"
+            : variant === "danger"
+            ? "bg-gradient-to-r from-rose-500 to-rose-600 animate-pulse"
             : "bg-gradient-to-r from-emerald-500 to-emerald-600"
         )}
         style={{ transform: `translateX(-${100 - percentage}%)` }}
