@@ -1,23 +1,29 @@
-/* ===== ADMIN DASHBOARD BASE STYLES ===== */
+/* ===== ADMIN DASHBOARD BASE & HEADER STYLES ===== */
 .admin-body {
-  background-color: var(--bg-primary);
+  background: radial-gradient(circle at top right, rgba(5, 150, 105, 0.05), transparent 40%),
+              var(--bg-primary);
   min-height: 100vh;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
 }
 
 .admin-header {
-  background-color: var(--bg-card);
+  background-color: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="dark"] .admin-header {
+  background-color: rgba(15, 23, 42, 0.85);
 }
 
 .admin-header-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 14px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,19 +37,23 @@
 }
 
 .admin-title-area h1 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--text) 30%, var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .admin-badge {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   background-color: var(--primary-light);
   color: var(--primary);
+  border: 1px solid rgba(5, 150, 105, 0.2);
   padding: 4px 10px;
   border-radius: 100px;
-  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .admin-controls {
@@ -53,60 +63,72 @@
 }
 
 .month-picker {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  background-color: var(--bg-primary);
+  background-color: var(--bg-card);
   color: var(--text);
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
 }
 
-/* Overview Banner Stats */
+/* Modern Overview Stats Cards */
 .admin-overview {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
-  margin-top: 24px;
-  margin-bottom: 32px;
+  margin-top: 28px;
+  margin-bottom: 36px;
 }
 
 .overview-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 .overview-label {
-  font-size: 0.825rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 .overview-val {
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .overview-val.income { color: var(--primary); }
 .overview-val.pending { color: #f59e0b; }
 .overview-val.rooms { color: var(--secondary); }
 
-/* PIN Lock Screen Overlay */
+/* Premium Glassmorphism Auth Overlay */
 .pin-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -118,27 +140,21 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 40px 32px;
-  max-width: 380px;
+  padding: 44px 36px;
+  max-width: 400px;
   width: 100%;
   text-align: center;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
 }
 
 .pin-box h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   margin-bottom: 8px;
+  letter-spacing: -0.02em;
 }
 
 .pin-box p {
-  font-size: 0.9rem;
-  margin-bottom: 24px;
-}
-
-.pin-input {
-  letter-spacing: 0.5em;
-  font-size: 1.5rem;
-  text-align: center;
-  font-weight: 700;
-  margin-bottom: 16px;
+  font-size: 0.925rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
 }
