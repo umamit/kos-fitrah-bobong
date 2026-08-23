@@ -15,14 +15,17 @@
 * **Presisi Pemotongan (Cropping)**: Lakukan pemotongan (cropping) gambar logo secara ketat mengikuti batas piksel konten asli (bounding box). Pastikan ornamen di luar logo (seperti pita samping pada gambar mentah) dan teks di luar area simbol tidak ikut terpotong sebagian atau terbawa masuk.
 * **Cache-Busting Wajib**: Setiap kali mengubah file gambar (logo, favicon), stylesheet (CSS), atau skrip logika (JS), versi parameter di file HTML wajib dinaikkan ke nomor versi baru yang unik/belum pernah digunakan (misal: `index.js?v=1.0.6` menjadi `index.js?v=1.0.7`). Jangan pernah menggunakan kembali nomor versi cache-busting yang sudah ada setelah file diubah, karena peramban klien/Cloudflare akan mengabaikan pembaruan tersebut.
 
-## Kualitas Kode CSS & JS
-* **Batas Panjang File & Fungsi (Maks 150 Baris)**: Setiap file modul, komponen kode, atau fungsi tidak boleh melebihi **150 baris** (150L). Jika mendekati atau melampaui batas ini, wajib dipecah menjadi modul atau fungsi pembantu yang lebih kecil dan terfokus.
-* **1 Kode 1 Fungsi (Single Responsibility)**: Setiap blok kode, file modul, atau fungsi hanya boleh memiliki satu tugas atau tanggung jawab spesifik. Hindari mencampuradukkan berbagai logika yang tidak terkait dalam satu fungsi atau file yang sama.
-* **Struktur CSS Modular**: CSS website ini dibagi ke dalam file-file modular dengan peran yang jelas — jangan menggabungkannya kembali menjadi satu file monolitik:
-  * `base.css` — Variabel global, reset CSS, tipografi, komponen dasar (tombol, navbar, layout umum).
-  * `sections.css` — Gaya tiap seksi utama halaman (Hero, Kamar, Spesifikasi, Tata Tertib).
-  * `components.css` — Komponen interaktif (FAQ accordion, kalkulator, peta kontak, footer) dan semua media query responsif.
-* **Don't Repeat Yourself (DRY)**: Gunakan CSS Custom Properties (`--nama-variabel`) untuk warna, shadow, radius, dan transisi. Jangan menulis nilai statis (seperti warna hex) berulang di berbagai selector jika sudah tersedia sebagai variabel.
-* **Vanilla JS Only**: Website ini menggunakan HTML, CSS, dan JS murni. Jangan menambahkan framework atau library eksternal (Tailwind, Bootstrap, React, Vue, dll.) yang membebani ukuran file dan performa.
+## Kualitas Kode & Arsitektur Framework
+* **Batas Panjang File & Fungsi (Maks 150 Baris)**: Setiap file modul, komponen `.astro`, skrip JavaScript, atau stylesheet CSS tidak boleh melebihi **150 baris** (150L). Jika mendekati atau melampaui batas ini, wajib dipecah menjadi subkomponen atau fungsi pembantu yang lebih kecil dan terfokus.
+* **1 Kode 1 Fungsi (Single Responsibility)**: Setiap blok kode, file modul, atau komponen hanya boleh memiliki satu tugas atau tanggung jawab spesifik.
+* **Framework Astro & Islands Architecture**: Website ini menggunakan **Astro Framework** dengan prinsip *Zero-JS by Default* untuk landing page publik (`index.astro`), dan *Client Islands* interaktif untuk kalkulator serta dashboard admin (`admin.astro`).
+* **Struktur Kode Terorganisir**:
+  * `src/components/` — Komponen UI modular (Navbar, Hero, RoomGrid, Specs, Rules, Faq, Calculator, ContactMap, Footer).
+  * `src/layouts/` — Template halaman dasar (SEO, meta tags, schema JSON-LD, font).
+  * `src/pages/` — Rute halaman publik dan dashboard admin.
+  * `src/styles/` — Modul CSS terpisah (variables, base, navbar, hero, rooms, calculator, admin, responsive).
+  * `src/lib/` — Helper logika murni (Supabase client, theme, auth, ledger).
+* **Don't Repeat Yourself (DRY)**: Gunakan CSS Custom Properties (`--nama-variabel`) untuk warna, shadow, radius, dan transisi. Gunakan props pada komponen Astro untuk menghindari duplikasi markup HTML.
+* **Konektivitas Cloud & Supabase**: Dashboard admin terhubung dengan database cloud Supabase menggunakan REST API ringan tanpa dependensi pustaka berat. Kredensial sensitif disimpan di `.env.local` dan wajib terdaftar di `.gitignore`.
 
 
