@@ -33,40 +33,60 @@ export default function AdminPage() {
   const [activePayRoom, setActivePayRoom] = useState<RoomAdminData | null>(null);
   const [activeEditRoom, setActiveEditRoom] = useState<RoomAdminData | null>(null);
 
-  // Load session & Sync with Supabase Cloud
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) setIsAuthenticated(true);
     });
 
     const loadData = async () => {
-      // 1. Fetch Rooms from Supabase or Local fallback
+      // 1. Fetch Rooms from Supabase
       try {
         const { data: cloudRooms, error } = await supabase.from("rooms").select("*").order("id");
         if (!error && cloudRooms && cloudRooms.length > 0) {
-          setRooms(cloudRooms);
+          const mapped = cloudRooms.map((r: any) => ({
+            id: r.id,
+            type: r.type,
+            tenant: r.tenant || "",
+            phone: r.phone || "",
+            rate: Number(r.rate) || 600000,
+            dueDay: Number(r.due_day) || 1,
+            occupied: Boolean(r.occupied)
+          }));
+          setRooms(mapped);
         } else {
-          const local = localStorage.getItem("kosfitrah_rooms_v3");
-          if (local) setRooms(JSON.parse(local));
+          // Seed default rooms to Supabase if table is empty
+          const seedData = defaultRooms.map((r) => ({
+            id: r.id,
+            type: r.type,
+            tenant: r.tenant,
+            phone: r.phone,
+            rate: r.rate,
+            due_day: r.dueDay,
+            occupied: r.occupied
+          }));
+          await supabase.from("rooms").upsert(seedData);
         }
-      } catch (e) {
-        const local = localStorage.getItem("kosfitrah_rooms_v3");
-        if (local) setRooms(JSON.parse(local));
-      }
+      } catch (e) {}
 
       // 2. Fetch Payments for current period
       try {
-        const { data: cloudPay, error } = await supabase.from("payments").select("*").eq("period", period).order("created_at", { ascending: false });
+        const { data: cloudPay, error } = await supabase
+          .from("payments")
+          .select("*")
+          .eq("period", period)
+          .order("created_at", { ascending: false });
+
         if (!error && cloudPay) {
-          setPayments(cloudPay);
-        } else {
-          const localPay = localStorage.getItem(`kosfitrah_pay_v3_${period}`);
-          if (localPay) setPayments(JSON.parse(localPay));
+          const mappedPay = cloudPay.map((p: any) => ({
+            id: p.id,
+            roomId: p.room_id,
+            amount: Number(p.amount),
+            date: p.date,
+            note: p.note || ""
+          }));
+          setPayments(mappedPay);
         }
-      } catch (e) {
-        const localPay = localStorage.getItem(`kosfitrah_pay_v3_${period}`);
-        if (localPay) setPayments(JSON.parse(localPay));
-      }
+      } catch (e) {}
     };
 
     loadData();
@@ -75,8 +95,18 @@ export default function AdminPage() {
   const handleSaveRooms = async (updated: RoomAdminData) => {
     const next = rooms.map((r) => (r.id === updated.id ? updated : r));
     setRooms(next);
-    localStorage.setItem("kosfitrah_rooms_v3", JSON.stringify(next));
-    try { await supabase.from("rooms").upsert(updated); } catch (e) {}
+    try {
+      await supabase.from("rooms").upsert({
+        id: updated.id,
+        type: updated.type,
+        tenant: updated.tenant,
+        phone: updated.phone,
+        rate: updated.rate,
+        due_day: updated.dueDay,
+        occupied: updated.occupied,
+        updated_at: new Date().toISOString()
+      });
+    } catch (e) {}
   };
 
   const handleAddPayment = async (amount: number, date: string, note: string) => {
@@ -88,17 +118,24 @@ export default function AdminPage() {
       date,
       note
     };
-    const next = [newPay, ...payments];
-    setPayments(next);
-    localStorage.setItem(`kosfitrah_pay_v3_${period}`, JSON.stringify(next));
-    try { await supabase.from("payments").insert({ ...newPay, period }); } catch (e) {}
+    setPayments([newPay, ...payments]);
+    try {
+      await supabase.from("payments").insert({
+        id: newPay.id,
+        room_id: newPay.roomId,
+        amount: newPay.amount,
+        date: newPay.date,
+        note: newPay.note,
+        period
+      });
+    } catch (e) {}
   };
 
   const handleDeletePayment = async (id: string) => {
-    const next = payments.filter((p) => p.id !== id);
-    setPayments(next);
-    localStorage.setItem(`kosfitrah_pay_v3_${period}`, JSON.stringify(next));
-    try { await supabase.from("payments").delete().eq("id", id); } catch (e) {}
+    setPayments(payments.filter((p) => p.id !== id));
+    try {
+      await supabase.from("payments").delete().eq("id", id);
+    } catch (e) {}
   };
 
   const occupiedRooms = rooms.filter((r) => r.occupied);
