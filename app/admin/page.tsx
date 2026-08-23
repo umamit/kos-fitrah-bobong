@@ -62,6 +62,14 @@ export default function AdminPage() {
             rate: r.rate, due_day: r.dueDay, occupied: r.occupied, debt: r.debt || 0
           }));
           await supabase.from("rooms").upsert(seedData);
+          const { data: refetched } = await supabase.from("rooms").select("*").order("id");
+          if (refetched) {
+            setRooms(refetched.map((r: any) => ({
+              id: r.id, type: r.type, tenant: r.tenant || "", phone: r.phone || "",
+              rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied),
+              debt: Number(r.debt) || 0
+            })));
+          }
         }
       } catch (e) {}
 
@@ -72,8 +80,12 @@ export default function AdminPage() {
           setPayments(cloudPay.map((p: any) => ({
             id: p.id, roomId: p.room_id, amount: Number(p.amount), date: p.date, note: p.note || ""
           })));
+        } else {
+          setPayments([]);
         }
-      } catch (e) {}
+      } catch (e) {
+        setPayments([]);
+      }
     };
 
     loadData();
