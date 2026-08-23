@@ -43,7 +43,10 @@ export function PaymentModal({
 
   const roomPayments = payments.filter((p) => p.roomId === room.id);
   const totalPaid = roomPayments.reduce((acc, p) => acc + p.amount, 0);
-  const remaining = Math.max(0, room.rate - totalPaid);
+  
+  const debtVal = room.debt || 0;
+  const totalTarget = room.rate + debtVal;
+  const remaining = Math.max(0, totalTarget - totalPaid);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,13 +54,13 @@ export function PaymentModal({
     if (!val || val <= 0) return;
     onAddPayment(val, date, note);
 
-    const isLunas = (totalPaid + val) >= room.rate;
+    const isLunas = (totalPaid + val) >= totalTarget;
     const info = `Berhasil menyimpan pembayaran sebesar ${formatCurrency(val)} untuk Kamar ${room.id}. Status: ${isLunas ? "LUNAS" : "BELUM LUNAS"}`;
     setSuccessMsg(info);
 
     if (sendWa) {
       const currentPaid = totalPaid + val;
-      const currentRemaining = Math.max(0, room.rate - currentPaid);
+      const currentRemaining = Math.max(0, totalTarget - currentPaid);
       const statusStr = currentRemaining === 0 ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(currentRemaining)})`;
       const noteStr = note ? `\n• Keterangan: ${note}` : "";
 
@@ -71,8 +74,10 @@ Periode: *${period}*
 • Tanggal: ${date}
 • Jumlah Masuk: *${formatCurrency(val)}*${noteStr}
 
-*STATUS TAGIHAN BULAN INI:*
-• Total Tagihan: ${formatCurrency(room.rate)}
+*STATUS TAGIHAN:*
+• Tarif Kamar: ${formatCurrency(room.rate)} / bulan
+• Tunggakan Lalu: ${formatCurrency(debtVal)}
+• Total Harus Dibayar: ${formatCurrency(totalTarget)}
 • Total Sudah Masuk: ${formatCurrency(currentPaid)}
 • Status: *${statusStr}*
 ============================
@@ -87,19 +92,35 @@ Terima kasih atas pembayaran Anda.`;
     setTimeout(() => setSuccessMsg(""), 5000);
   };
 
+  const handlePayLunasBulanIni = () => {
+    setAmount(remaining.toString());
+    setNote("Pelunasan Tagihan");
+  };
+
   return (
     <Dialog open={open} onClose={() => { setSuccessMsg(""); onClose(); }} title={`Pembukuan Kamar ${room.id}`}>
       <div className="space-y-6">
-        <div className="flex justify-between items-center p-4 rounded-xl bg-muted border border-border">
+        {/* Info Box */}
+        <div className="grid grid-cols-3 gap-2 p-4 rounded-xl bg-muted border border-border text-center">
           <div>
-            <span className="text-xs font-semibold text-muted-foreground">Sudah Dibayar</span>
-            <div className="text-lg font-extrabold text-emerald-600">{formatCurrency(totalPaid)}</div>
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">Sudah Bayar</span>
+            <div className="text-sm sm:text-base font-extrabold text-emerald-600">{formatCurrency(totalPaid)}</div>
           </div>
-          <div className="text-right">
-            <span className="text-xs font-semibold text-muted-foreground">Sisa Tagihan</span>
-            <div className="text-lg font-extrabold text-amber-500">{formatCurrency(remaining)}</div>
+          <div className="border-x border-border/80">
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">Tunggakan</span>
+            <div className="text-sm sm:text-base font-extrabold text-red-500">{formatCurrency(debtVal)}</div>
+          </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase text-muted-foreground">Sisa Tagihan</span>
+            <div className="text-sm sm:text-base font-extrabold text-amber-500">{formatCurrency(remaining)}</div>
           </div>
         </div>
+
+        {remaining > 0 && (
+          <Button variant="outline" size="sm" onClick={handlePayLunasBulanIni} className="w-full text-xs font-bold py-2 border-emerald-500/35 hover:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
+            Pilih Lunas / Bayar Semua Sisa Tagihan ({formatCurrency(remaining)})
+          </Button>
+        )}
 
         {successMsg && (
           <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-start gap-2.5">
@@ -153,10 +174,11 @@ Periode: *${period}*
 • Tanggal: ${p.date}
 • Jumlah Masuk: *${formatCurrency(p.amount)}*${noteStr}
 
-*STATUS TAGIHAN BULAN INI:*
-• Total Tagihan: ${formatCurrency(room.rate)}
+*STATUS TAGIHAN:*
+• Tarif Kamar: ${formatCurrency(room.rate)} / bulan
+• Tunggakan Lalu: ${formatCurrency(debtVal)}
 • Total Sudah Masuk: ${formatCurrency(totalPaid)}
-• Status: *${totalPaid >= room.rate ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(remaining)})`}*
+• Status: *${totalPaid >= totalTarget ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(remaining)})`}*
 ============================
 Terima kasih atas pembayaran Anda.`;
                       const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");

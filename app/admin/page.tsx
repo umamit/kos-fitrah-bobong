@@ -10,15 +10,15 @@ import { LoginOverlay } from "@/components/admin/LoginOverlay";
 import { supabase } from "@/lib/supabase/client";
 
 const defaultRooms: RoomAdminData[] = [
-  { id: "01", type: "basic", tenant: "Budi Santoso", phone: "08123456789", rate: 600000, dueDay: 5, occupied: true },
-  { id: "02", type: "basic", tenant: "Ahmad Rizki", phone: "08129876543", rate: 600000, dueDay: 10, occupied: true },
-  { id: "03", type: "comfort", tenant: "Siti Rahma", phone: "08215554443", rate: 700000, dueDay: 1, occupied: true },
-  { id: "04", type: "comfort", tenant: "", phone: "", rate: 700000, dueDay: 1, occupied: false },
-  { id: "05", type: "breeze", tenant: "Fajar Pratama", phone: "08521112223", rate: 750000, dueDay: 15, occupied: true },
-  { id: "06", type: "breeze", tenant: "Dewi Lestari", phone: "08137778889", rate: 750000, dueDay: 20, occupied: true },
-  { id: "07", type: "vip", tenant: "Hendro Wijaya", phone: "08112223334", rate: 1000000, dueDay: 25, occupied: true },
-  { id: "08", type: "vip", tenant: "", phone: "", rate: 1000000, dueDay: 1, occupied: false },
-  { id: "09", type: "vip", tenant: "Rian Saputra", phone: "08139990001", rate: 1000000, dueDay: 8, occupied: true }
+  { id: "01", type: "basic", tenant: "Budi Santoso", phone: "08123456789", rate: 600000, dueDay: 5, occupied: true, debt: 0 },
+  { id: "02", type: "basic", tenant: "Ahmad Rizki", phone: "08129876543", rate: 600000, dueDay: 10, occupied: true, debt: 0 },
+  { id: "03", type: "comfort", tenant: "Siti Rahma", phone: "08215554443", rate: 700000, dueDay: 1, occupied: true, debt: 0 },
+  { id: "04", type: "comfort", tenant: "", phone: "", rate: 700000, dueDay: 1, occupied: false, debt: 0 },
+  { id: "05", type: "breeze", tenant: "Fajar Pratama", phone: "08521112223", rate: 750000, dueDay: 15, occupied: true, debt: 0 },
+  { id: "06", type: "breeze", tenant: "Dewi Lestari", phone: "08137778889", rate: 750000, dueDay: 20, occupied: true, debt: 0 },
+  { id: "07", type: "vip", tenant: "Hendro Wijaya", phone: "08112223334", rate: 1000000, dueDay: 25, occupied: true, debt: 0 },
+  { id: "08", type: "vip", tenant: "", phone: "", rate: 1000000, dueDay: 1, occupied: false, debt: 0 },
+  { id: "09", type: "vip", tenant: "Rian Saputra", phone: "08139990001", rate: 1000000, dueDay: 8, occupied: true, debt: 0 }
 ];
 
 export default function AdminPage() {
@@ -53,12 +53,13 @@ export default function AdminPage() {
         if (!error && cloudRooms && cloudRooms.length > 0) {
           setRooms(cloudRooms.map((r: any) => ({
             id: r.id, type: r.type, tenant: r.tenant || "", phone: r.phone || "",
-            rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied)
+            rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied),
+            debt: Number(r.debt) || 0
           })));
         } else {
           const seedData = defaultRooms.map((r) => ({
             id: r.id, type: r.type, tenant: r.tenant, phone: r.phone,
-            rate: r.rate, due_day: r.dueDay, occupied: r.occupied
+            rate: r.rate, due_day: r.dueDay, occupied: r.occupied, debt: r.debt || 0
           }));
           await supabase.from("rooms").upsert(seedData);
         }
@@ -88,7 +89,8 @@ export default function AdminPage() {
     try {
       await supabase.from("rooms").upsert({
         id: updated.id, type: updated.type, tenant: updated.tenant, phone: updated.phone,
-        rate: updated.rate, due_day: updated.dueDay, occupied: updated.occupied, updated_at: new Date().toISOString()
+        rate: updated.rate, due_day: updated.dueDay, occupied: updated.occupied, debt: updated.debt || 0,
+        updated_at: new Date().toISOString()
       });
     } catch (e) {}
   };
@@ -111,16 +113,8 @@ export default function AdminPage() {
 
   const occupiedRooms = rooms.filter((r) => r.occupied);
   const totalIncome = payments.reduce((acc, p) => acc + p.amount, 0);
-  const totalTarget = occupiedRooms.reduce((acc, r) => acc + r.rate, 0);
+  const totalTarget = occupiedRooms.reduce((acc, r) => acc + r.rate + (r.debt || 0), 0);
   const totalPending = Math.max(0, totalTarget - totalIncome);
-
-  if (isAuthenticated === null) {
-    return <div className="min-h-screen bg-background flex items-center justify-center text-sm font-semibold text-muted-foreground">Memverifikasi keamanan sesi...</div>;
-  }
-
-  if (!isAuthenticated) {
-    return <LoginOverlay onLoginSuccess={() => setIsAuthenticated(true)} />;
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(5,150,105,0.08),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(11,15,25,0))]">

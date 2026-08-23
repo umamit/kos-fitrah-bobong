@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Settings, User, PhoneCall, Calendar } from "lucide-react";
+import { Plus, Settings, User, PhoneCall, Calendar, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,7 @@ export interface RoomAdminData {
   rate: number;
   dueDay: number;
   occupied: boolean;
+  debt?: number; // Tunggakan bulan-bulan sebelumnya
 }
 
 export function RoomCardAdmin({
@@ -27,14 +28,16 @@ export function RoomCardAdmin({
   onPay: (id: string) => void;
   onEdit: (id: string) => void;
 }) {
-  const rem = Math.max(0, room.rate - paid);
-  const percent = room.occupied ? Math.min(100, Math.round((paid / room.rate) * 100)) : 0;
+  const debtVal = room.debt || 0;
+  const totalTarget = room.rate + debtVal;
+  const rem = Math.max(0, totalTarget - paid);
+  const percent = room.occupied ? Math.min(100, Math.round((paid / totalTarget) * 100)) : 0;
   
   let statusText = "KOSONG";
   let statusVariant: "success" | "warning" | "danger" | "muted" = "muted";
 
   if (room.occupied) {
-    if (paid >= room.rate) {
+    if (paid >= totalTarget) {
       statusText = "Lunas";
       statusVariant = "success";
     } else if (paid > 0) {
@@ -77,6 +80,12 @@ export function RoomCardAdmin({
                 <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" />
                 <span>Jatuh tempo tgl <strong>{room.dueDay}</strong> • {formatCurrency(room.rate)}/bln</span>
               </div>
+              {debtVal > 0 && (
+                <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-semibold bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200/50">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>Ada Tunggakan: {formatCurrency(debtVal)}</span>
+                </div>
+              )}
             </div>
           ) : (
             <p className="text-xs text-muted-foreground">Unit kosong siap disewakan kapan saja.</p>

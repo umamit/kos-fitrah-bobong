@@ -29,6 +29,7 @@ export function EditRoomModal({
   const [rate, setRate] = useState(600000);
   const [dueDay, setDueDay] = useState(1);
   const [occupied, setOccupied] = useState(false);
+  const [debt, setDebt] = useState(0);
 
   useEffect(() => {
     if (room) {
@@ -37,6 +38,7 @@ export function EditRoomModal({
       setRate(room.rate || 600000);
       setDueDay(room.dueDay || 1);
       setOccupied(room.occupied);
+      setDebt(room.debt || 0);
     }
   }, [room]);
 
@@ -50,7 +52,8 @@ export function EditRoomModal({
       phone,
       rate,
       dueDay,
-      occupied
+      occupied,
+      debt
     });
     onClose();
   };
@@ -102,9 +105,21 @@ export function EditRoomModal({
             />
           </div>
         </div>
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase text-foreground">Tanggal Jatuh Tempo Setiap Bulan</label>
-          <Input type="number" min="1" max="31" value={dueDay} onChange={(e) => setDueDay(parseInt(e.target.value) || 1)} required />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase text-foreground">Tanggal Jatuh Tempo</label>
+            <Input type="number" min="1" max="31" value={dueDay} onChange={(e) => setDueDay(parseInt(e.target.value) || 1)} required />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase text-foreground text-amber-600">Tunggakan Lalu (Rp)</label>
+            <Input
+              type="number"
+              step="50000"
+              value={debt}
+              onChange={(e) => setDebt(parseInt(e.target.value) || 0)}
+              placeholder="Tunggakan bulan lalu"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2 p-3 bg-muted/60 rounded-xl border border-border">
           <input
