@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MessageCircle, Trash2 } from "lucide-react";
+import { MessageCircle, Trash2, CheckCircle2 } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,13 +30,14 @@ export function PaymentModal({
   room: RoomAdminData | null;
   period: string;
   payments: PaymentRecord[];
-  onAddPayment: (amount: number, date: string, note: string, sendWa: boolean) => void;
+  onAddPayment: (amount: number, date: string, note: string) => void;
   onDeletePayment: (id: string) => void;
 }) {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [note, setNote] = useState("");
   const [sendWa, setSendWa] = useState(true);
+  const [successMsg, setSuccessMsg] = useState("");
 
   if (!room) return null;
 
@@ -48,39 +49,46 @@ export function PaymentModal({
     e.preventDefault();
     const val = parseInt(amount);
     if (!val || val <= 0) return;
-    onAddPayment(val, date, note, sendWa);
-    setAmount("");
-    setNote("");
-  };
+    onAddPayment(val, date, note);
 
-  const handleSendWA = (p: PaymentRecord) => {
-    const isLunas = remaining === 0;
-    const statusStr = isLunas ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(remaining)})`;
-    const noteStr = p.note ? `\n• Keterangan: ${p.note}` : "";
+    const isLunas = (totalPaid + val) >= room.rate;
+    const info = `Berhasil menyimpan pembayaran sebesar ${formatCurrency(val)} untuk Kamar ${room.id}. Status: ${isLunas ? "LUNAS" : "BELUM LUNAS"}`;
+    setSuccessMsg(info);
 
-    const msg = `*KWITANSI PEMBAYARAN KOS FITRAH*
+    if (sendWa) {
+      const currentPaid = totalPaid + val;
+      const currentRemaining = Math.max(0, room.rate - currentPaid);
+      const statusStr = currentRemaining === 0 ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(currentRemaining)})`;
+      const noteStr = note ? `\n• Keterangan: ${note}` : "";
+
+      const msg = `*KWITANSI PEMBAYARAN KOS FITRAH*
 ============================
 Kepada Yth: *${room.tenant}*
 Kamar: *No. ${room.id}*
 Periode: *${period}*
 
 *RINCIAN PEMBAYARAN:*
-• Tanggal: ${p.date}
-• Jumlah Masuk: *${formatCurrency(p.amount)}*${noteStr}
+• Tanggal: ${date}
+• Jumlah Masuk: *${formatCurrency(val)}*${noteStr}
 
 *STATUS TAGIHAN BULAN INI:*
 • Total Tagihan: ${formatCurrency(room.rate)}
-• Total Sudah Masuk: ${formatCurrency(totalPaid)}
+• Total Sudah Masuk: ${formatCurrency(currentPaid)}
 • Status: *${statusStr}*
 ============================
 Terima kasih atas pembayaran Anda.`;
 
-    const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+      const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    setAmount("");
+    setNote("");
+    setTimeout(() => setSuccessMsg(""), 5000);
   };
 
   return (
-    <Dialog open={open} onClose={onClose} title={`Pembukuan Kamar ${room.id}`}>
+    <Dialog open={open} onClose={() => { setSuccessMsg(""); onClose(); }} title={`Pembukuan Kamar ${room.id}`}>
       <div className="space-y-6">
         <div className="flex justify-between items-center p-4 rounded-xl bg-muted border border-border">
           <div>
@@ -92,6 +100,13 @@ Terima kasih atas pembayaran Anda.`;
             <div className="text-lg font-extrabold text-amber-500">{formatCurrency(remaining)}</div>
           </div>
         </div>
+
+        {successMsg && (
+          <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 rounded-xl text-emerald-800 dark:text-emerald-300 text-xs font-semibold flex items-start gap-2.5">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
+            <span>{successMsg}</span>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
@@ -126,7 +141,27 @@ Terima kasih atas pembayaran Anda.`;
                     <div className="text-muted-foreground text-[11px]">{p.note || "Tanpa catatan"}</div>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Button variant="secondary" size="sm" onClick={() => handleSendWA(p)} className="p-1.5 h-auto">
+                    <Button variant="secondary" size="sm" onClick={() => {
+                      const noteStr = p.note ? `\n• Keterangan: ${p.note}` : "";
+                      const msg = `*KWITANSI PEMBAYARAN KOS FITRAH*
+============================
+Kepada Yth: *${room.tenant}*
+Kamar: *No. ${room.id}*
+Periode: *${period}*
+
+*RINCIAN PEMBAYARAN:*
+• Tanggal: ${p.date}
+• Jumlah Masuk: *${formatCurrency(p.amount)}*${noteStr}
+
+*STATUS TAGIHAN BULAN INI:*
+• Total Tagihan: ${formatCurrency(room.rate)}
+• Total Sudah Masuk: ${formatCurrency(totalPaid)}
+• Status: *${totalPaid >= room.rate ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(remaining)})`}*
+============================
+Terima kasih atas pembayaran Anda.`;
+                      const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");
+                      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
+                    }} className="p-1.5 h-auto">
                       <MessageCircle className="w-3.5 h-3.5" />
                     </Button>
                     <Button variant="danger" size="sm" onClick={() => onDeletePayment(p.id)} className="p-1.5 h-auto">
