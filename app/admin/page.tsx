@@ -22,7 +22,7 @@ const defaultRooms: RoomAdminData[] = [
 ];
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [period, setPeriod] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
@@ -35,15 +35,23 @@ export default function AdminPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setIsAuthenticated(true);
+      setIsAuthenticated(Boolean(data.session));
     });
 
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(Boolean(session));
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
     const loadData = async () => {
-      // 1. Fetch Rooms from Supabase
       try {
         const { data: cloudRooms, error } = await supabase.from("rooms").select("*").order("id");
         if (!error && cloudRooms && cloudRooms.length > 0) {
-          const mapped = cloudRooms.map((r: any) => ({
+          setRooms(cloudRooms.map((r: any) => ({
             id: r.id,
             type: r.type,
             tenant: r.tenant || "",
@@ -51,91 +59,59 @@ export default function AdminPage() {
             rate: Number(r.rate) || 600000,
             dueDay: Number(r.due_day) || 1,
             occupied: Boolean(r.occupied)
-          }));
-          setRooms(mapped);
+          })));
         } else {
-          // Seed default rooms to Supabase if table is empty
           const seedData = defaultRooms.map((r) => ({
-            id: r.id,
-            type: r.type,
-            tenant: r.tenant,
-            phone: r.phone,
-            rate: r.rate,
-            due_day: r.dueDay,
-            occupied: r.occupied
+            id: r.id, type: r.type, tenant: r.tenant, phone: r.phone,
+            rate: r.rate, due_day: r.dueDay, occupied: r.occupied
           }));
           await supabase.from("rooms").upsert(seedData);
         }
       } catch (e) {}
 
-      // 2. Fetch Payments for current period
       try {
         const { data: cloudPay, error } = await supabase
-          .from("payments")
-          .select("*")
-          .eq("period", period)
-          .order("created_at", { ascending: false });
-
+          .from("payments").select("*").eq("period", period).order("created_at", { ascending: false });
         if (!error && cloudPay) {
-          const mappedPay = cloudPay.map((p: any) => ({
-            id: p.id,
-            roomId: p.room_id,
-            amount: Number(p.amount),
-            date: p.date,
-            note: p.note || ""
-          }));
-          setPayments(mappedPay);
+          setPayments(cloudPay.map((p: any) => ({
+            id: p.id, roomId: p.room_id, amount: Number(p.amount), date: p.date, note: p.note || ""
+          })));
         }
       } catch (e) {}
     };
 
     loadData();
-  }, [period]);
+  }, [period, isAuthenticated]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setIsAuthenticated(false);
+  };
 
   const handleSaveRooms = async (updated: RoomAdminData) => {
-    const next = rooms.map((r) => (r.id === updated.id ? updated : r));
-    setRooms(next);
+    setRooms(rooms.map((r) => (r.id === updated.id ? updated : r)));
     try {
       await supabase.from("rooms").upsert({
-        id: updated.id,
-        type: updated.type,
-        tenant: updated.tenant,
-        phone: updated.phone,
-        rate: updated.rate,
-        due_day: updated.dueDay,
-        occupied: updated.occupied,
-        updated_at: new Date().toISOString()
+        id: updated.id, type: updated.type, tenant: updated.tenant, phone: updated.phone,
+        rate: updated.rate, due_day: updated.dueDay, occupied: updated.occupied, updated_at: new Date().toISOString()
       });
     } catch (e) {}
   };
 
   const handleAddPayment = async (amount: number, date: string, note: string) => {
     if (!activePayRoom) return;
-    const newPay: PaymentRecord = {
-      id: "pay_" + Date.now(),
-      roomId: activePayRoom.id,
-      amount,
-      date,
-      note
-    };
+    const newPay: PaymentRecord = { id: "pay_" + Date.now(), roomId: activePayRoom.id, amount, date, note };
     setPayments([newPay, ...payments]);
     try {
       await supabase.from("payments").insert({
-        id: newPay.id,
-        room_id: newPay.roomId,
-        amount: newPay.amount,
-        date: newPay.date,
-        note: newPay.note,
-        period
+        id: newPay.id, room_id: newPay.roomId, amount: newPay.amount, date: newPay.date, note: newPay.note, period
       });
     } catch (e) {}
   };
 
   const handleDeletePayment = async (id: string) => {
     setPayments(payments.filter((p) => p.id !== id));
-    try {
-      await supabase.from("payments").delete().eq("id", id);
-    } catch (e) {}
+    try { await supabase.from("payments").delete().eq("id", id); } catch (e) {}
   };
 
   const occupiedRooms = rooms.filter((r) => r.occupied);
@@ -143,10 +119,17 @@ export default function AdminPage() {
   const totalTarget = occupiedRooms.reduce((acc, r) => acc + r.rate, 0);
   const totalPending = Math.max(0, totalTarget - totalIncome);
 
+  if (isAuthenticated === null) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-sm font-semibold text-muted-foreground">Memverifikasi keamanan sesi...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginOverlay onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {!isAuthenticated && <LoginOverlay onLoginSuccess={() => setIsAuthenticated(true)} />}
-      <AdminHeader period={period} onPeriodChange={setPeriod} onLock={() => setIsAuthenticated(false)} />
+      <AdminHeader period={period} onPeriodChange={setPeriod} onLock={handleLogout} />
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <StatsOverview totalIncome={totalIncome} totalPending={totalPending} occupiedCount={occupiedRooms.length} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
