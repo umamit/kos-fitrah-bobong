@@ -4,6 +4,8 @@ Thumbs.db
 .gemini/
 node_modules/
 dist/
+.astro/
+.vercel/
 scratch/
 
 # Environment Secrets

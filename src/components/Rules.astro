@@ -1,0 +1,33 @@
+---
+// Tata Tertib Kos Component
+const rules = [
+  { no: "01", title: "Kapasitas Maksimal", desc: "Satu kamar hanya diperuntukkan maksimal 2 (dua) orang penghuni." },
+  { no: "02", title: "Kebijakan Tamu", desc: "Tamu bebas berkunjung (termasuk lawan jenis) dengan tetap menjaga sopan santun dan etika bertetangga." },
+  { no: "03", title: "Kebersihan Pintu Keluar", desc: "Dilarang keras membuang atau meninggalkan sampah di samping pintu keluar kos. Gunakan tempat sampah utama." },
+  { no: "04", title: "Ketenangan Lingkungan", desc: "Kegaduhan berulang yang mengganggu penghuni lain setelah ditegur akan dikeluarkan secara tegas tanpa uang kembali." },
+  { no: "05", title: "Perlindungan Inventaris", desc: "Dilarang membawa pergi atau menukar fasilitas/inventaris kos (kipas angin, bohlam lampu, sprei, kasur, bantal, ember) saat keluar atau pindah." },
+  { no: "06", title: "Keamanan Barang Pribadi", desc: "Pengelola tidak bertanggung jawab atas kehilangan barang berharga pribadi. Selalu kunci kamar saat bepergian." },
+  { no: "07", title: "Kerapian Area Parkir", desc: "Parkir kendaraan roda dua secara tertib pada jalur yang disediakan agar tidak menghalangi akses keluar-masuk kamar lain." },
+  { no: "08", title: "Kebijakan Pembatalan / Keluar Awal", desc: "Tidak ada pengembalian dana (no refund) bagi penyewa yang memutuskan keluar atau berhenti sewa sebelum masa sewa berakhir." }
+];
+---
+<section class="section-container" id="peraturan">
+  <div class="section-header">
+    <span class="section-subtitle">Tata Tertib</span>
+    <h2>Aturan Hunian Bersama</h2>
+    <p class="section-desc">Aturan sederhana demi kenyamanan, keamanan, dan ketenangan seluruh penghuni Kos Fitrah.</p>
+  </div>
+  <div class="rules-container">
+    <div class="rules-box">
+      {rules.map((r) => (
+        <div class="rule-item">
+          <div class="rule-number">{r.no}</div>
+          <div class="rule-text">
+            <h4>{r.title}</h4>
+            <p>{r.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

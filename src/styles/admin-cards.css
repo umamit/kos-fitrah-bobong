@@ -1,0 +1,133 @@
+/* ===== 9 ROOMS CARDS GRID ===== */
+.admin-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.room-admin-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.room-admin-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.room-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.room-number-badge {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.room-status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-lunas {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.status-cicil {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+
+.status-belum {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.status-kosong {
+  background-color: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .status-lunas { background-color: rgba(5, 150, 105, 0.2); color: #34d399; }
+[data-theme="dark"] .status-cicil { background-color: rgba(217, 119, 6, 0.2); color: #fbbf24; }
+[data-theme="dark"] .status-belum { background-color: rgba(220, 38, 38, 0.2); color: #f87171; }
+
+.tenant-info {
+  margin-bottom: 16px;
+}
+
+.tenant-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.tenant-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Progress Bar for Installment / Cicilan */
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.825rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background-color: var(--bg-muted);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+
+.progress-bar-fill.warning {
+  background-color: #f59e0b;
+}
+
+.room-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  flex: 1;
+}

@@ -1,0 +1,77 @@
+---
+import AdminHeader from '../components/AdminHeader.astro';
+import AdminModals from '../components/AdminModals.astro';
+---
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembukuan Admin - Kos Fitrah Bobong</title>
+  <link rel="icon" type="image/png" href="/assets/logo-symbol.png?v=2.0.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/src/styles/variables.css">
+  <link rel="stylesheet" href="/src/styles/base.css">
+  <link rel="stylesheet" href="/src/styles/admin-base.css">
+  <link rel="stylesheet" href="/src/styles/admin-cards.css">
+  <link rel="stylesheet" href="/src/styles/admin-modal.css">
+  <link rel="stylesheet" href="/src/styles/responsive.css">
+</head>
+<body class="admin-body">
+
+  <!-- Supabase Auth Login Screen -->
+  <div class="pin-overlay" id="auth-overlay">
+    <div class="pin-box">
+      <h2>🔐 Login Pengelola</h2>
+      <p>Masuk dengan akun pengelola Kos Fitrah untuk mengakses pembukuan.</p>
+      <form id="auth-form">
+        <div class="form-group" style="margin-bottom:14px; text-align:left;">
+          <label for="auth-email">Email Admin</label>
+          <input type="email" id="auth-email" placeholder="admin@kosfitrah.uk" required autofocus>
+        </div>
+        <div class="form-group" style="margin-bottom:16px; text-align:left;">
+          <label for="auth-password">Password</label>
+          <input type="password" id="auth-password" placeholder="••••••••" required>
+        </div>
+        <div id="auth-error" style="color:#ef4444; font-size:0.85rem; margin-bottom:14px; display:none;"></div>
+        <button type="submit" id="auth-submit-btn" class="btn btn-primary btn-block">Masuk ke Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <AdminHeader />
+
+  <!-- Main Content Dashboard -->
+  <main class="section-container" style="padding-top:32px;">
+    <div class="admin-overview">
+      <div class="overview-card">
+        <span class="overview-label">Total Uang Masuk (Bulan Ini)</span>
+        <span class="overview-val income" id="stat-total-income">Rp 0</span>
+      </div>
+      <div class="overview-card">
+        <span class="overview-label">Sisa Tagihan / Piutang</span>
+        <span class="overview-val pending" id="stat-total-pending">Rp 0</span>
+      </div>
+      <div class="overview-card">
+        <span class="overview-label">Kamar Terisi</span>
+        <span class="overview-val rooms" id="stat-occupied-rooms">0 / 9 Kamar</span>
+      </div>
+    </div>
+
+    <div class="admin-rooms-grid" id="rooms-grid"></div>
+  </main>
+
+  <AdminModals />
+
+  <script src="/src/lib/supabase-client.js"></script>
+  <script src="/src/lib/admin-auth.js"></script>
+  <script src="/src/lib/admin-store.js"></script>
+  <script src="/src/lib/admin-whatsapp.js"></script>
+  <script src="/src/lib/admin-ledger.js"></script>
+  <script src="/src/lib/admin-modal.js"></script>
+  <script src="/src/lib/admin-room-edit.js"></script>
+</body>
+</html>

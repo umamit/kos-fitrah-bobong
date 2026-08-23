@@ -1,0 +1,80 @@
+---
+// Cost Calculator & Booking Component
+---
+<section class="section-container" id="kalkulator">
+  <div class="section-header">
+    <span class="section-subtitle">Estimasi Biaya</span>
+    <h2>Hitung Tarif Sewa Anda</h2>
+    <p class="section-desc">Pilih tipe kamar dan periode sewa untuk mendapatkan estimasi total biaya secara akurat dan transparan.</p>
+  </div>
+
+  <div class="calculator-wrapper">
+    <div class="calculator-card">
+      <form id="booking-form" class="booking-form">
+        <div class="form-group">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" name="nama" placeholder="Masukkan nama Anda" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipe-kamar">Tipe Kamar</label>
+            <select id="tipe-kamar" name="tipe-kamar" required>
+              <option value="basic">Standard Lite (Basic)</option>
+              <option value="comfort">Eco Comfort (Standard Plus)</option>
+              <option value="breeze">Eco Breeze (Standard Premium)</option>
+              <option value="vip">Executive VIP (Deluxe AC)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="jenis-sewa">Skema Sewa</label>
+            <select id="jenis-sewa" name="jenis-sewa" required>
+              <option value="hari">Harian</option>
+              <option value="bulan" selected>Bulanan</option>
+              <option value="tahun">Tahunan</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="durasi">Durasi Sewa (Bulan)</label>
+            <input type="number" id="durasi" name="durasi" min="1" max="60" value="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tanggal-masuk">Rencana Tanggal Masuk</label>
+            <input type="date" id="tanggal-masuk" name="tanggal-masuk" required>
+          </div>
+        </div>
+
+        <!-- Real-time Cost Summary -->
+        <div class="calculator-summary">
+          <h4>Ringkasan Estimasi Biaya</h4>
+          <div class="summary-row">
+            <span>Tarif Dasar:</span>
+            <strong id="summary-unit-price">Rp 600.000 / bulan</strong>
+          </div>
+          <div class="summary-row">
+            <span>Deposit / Jaminan:</span>
+            <strong>Rp 0 (Gratis)</strong>
+          </div>
+          <hr class="summary-divider">
+          <div class="summary-row total-row">
+            <span>Estimasi Total:</span>
+            <span class="total-price" id="summary-total">Rp 600.000</span>
+          </div>
+          <p class="summary-note text-muted">*Total biaya sudah termasuk air bersih dan fasilitas kamar standar.</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submit-booking-btn">
+          <svg class="wa-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.135.56 4.139 1.536 5.882l-1.636 5.977 6.136-1.61c1.703.929 3.644 1.451 5.71 1.451 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/>
+          </svg>
+          Ajukan Pemesanan via WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

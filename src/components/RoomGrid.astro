@@ -1,0 +1,95 @@
+---
+import RoomCard from './RoomCard.astro';
+
+const rooms = [
+  {
+    tag: "Standard Lite",
+    tagClass: "tag-standard",
+    image: "/assets/room_basic.jpg",
+    title: "Kamar Standard Lite (Basic)",
+    desc: "Pilihan hemat, praktis, dan esensial. Sangat ideal untuk Anda yang memprioritaskan efisiensi anggaran dan tempat istirahat yang bersih, tenang, serta privat.",
+    facilities: [
+      "Kamar Mandi Dalam Privat (Tanpa Antre)",
+      "Koneksi Wi-Fi 100 Mbps (Gratis)",
+      "Ventilasi Udara Alami yang Sehat",
+      "Kasur Busa Nyaman + Bantal & Sprei",
+      "Kipas Angin Dinding",
+      "Lemari Pakaian Minimalis"
+    ],
+    dayPrice: "Rp 100.000",
+    monthPrice: "Rp 600.000",
+    yearPrice: "Rp 6.600.000",
+    roomKey: "basic"
+  },
+  {
+    tag: "Standard Plus",
+    tagClass: "tag-standard",
+    image: "/assets/room_comfort.jpg",
+    title: "Kamar Eco Comfort (Standard Plus)",
+    desc: "Kenyamanan lebih dengan perabot kokoh buatan tangan dan sirkulasi udara optimal. Dirancang untuk durasi tinggal lebih lama yang bebas stres.",
+    facilities: [
+      "Kamar Mandi Dalam Privat (Tanpa Antre)",
+      "Koneksi Wi-Fi 100 Mbps (Gratis)",
+      "Jendela Pencahayaan Alami Segar",
+      "Kasur Busa Berkualitas & Sprei Bersih",
+      "Kipas Angin Dinding Efisien",
+      "Lemari Pakaian Handmade Kokoh"
+    ],
+    dayPrice: "Rp 100.000",
+    monthPrice: "Rp 700.000",
+    yearPrice: "Rp 7.700.000",
+    roomKey: "comfort"
+  },
+  {
+    tag: "Standard Premium",
+    tagClass: "tag-standard",
+    image: "/assets/room_standard.jpg",
+    title: "Kamar Eco Breeze (Standard Premium)",
+    desc: "Ruang yang lapang dan tenang dengan pencahayaan alami yang melimpah. Sangat pas untuk pekerja atau profesional yang butuh suasana rileks sepulang kerja.",
+    facilities: [
+      "Kamar Mandi Dalam Privat (Tanpa Antre)",
+      "Koneksi Wi-Fi 100 Mbps (Gratis)",
+      "Ventilasi & Pencahayaan Optimal",
+      "Kasur Tebal Nyaman + Bantal & Sprei",
+      "Kipas Angin Dinding",
+      "Lemari Pakaian Handmade Luas"
+    ],
+    dayPrice: "Rp 100.000",
+    monthPrice: "Rp 750.000",
+    yearPrice: "Rp 8.250.000",
+    roomKey: "breeze"
+  },
+  {
+    tag: "Deluxe VIP",
+    tagClass: "tag-vip",
+    image: "/assets/room_vip.jpg",
+    title: "Kamar Executive VIP (Deluxe AC)",
+    desc: "Tipe kamar terbaik dengan penyejuk udara (AC). Memberikan ketenangan mutlak, suhu sejuk setiap saat, dan privasi penuh kelas eksekutif.",
+    facilities: [
+      "Penyejuk Udara (Air Conditioner / AC)",
+      "Kamar Mandi Dalam Privat (Tanpa Antre)",
+      "Koneksi Wi-Fi 100 Mbps (Gratis)",
+      "Kasur Premium Empuk & Nyaman",
+      "Lemari Pakaian Handmade",
+      "Lingkungan Paling Hening & Privat"
+    ],
+    dayPrice: "Rp 150.000",
+    monthPrice: "Rp 1.000.000",
+    yearPrice: "Rp 11.000.000",
+    roomKey: "vip"
+  }
+];
+---
+<section class="section-container" id="kamar">
+  <div class="section-header">
+    <span class="section-subtitle">Kamar Kos</span>
+    <h2>Pilihan Tipe Kamar</h2>
+    <p class="section-desc">Pilih tipe hunian yang paling sesuai dengan kebutuhan harian dan kenyamanan Anda.</p>
+  </div>
+  <div class="kamar-grid">
+    {rooms.map((r) => <RoomCard {...r} />)}
+    <div class="kamar-disclaimer">
+      <p>*Harga sewa sudah termasuk fasilitas dasar kamar dan air bersih. Tidak ada biaya deposit/jaminan di awal.</p>
+    </div>
+  </div>
+</section>
