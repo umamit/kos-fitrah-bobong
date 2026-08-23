@@ -6,6 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { RoomAdminData } from "./RoomCardAdmin";
 
+const roomRates: Record<string, { label: string; value: number }> = {
+  basic: { label: "Standard Lite (Basic) - Rp 600.000", value: 600000 },
+  comfort: { label: "Eco Comfort (Standard Plus) - Rp 700.000", value: 700000 },
+  breeze: { label: "Eco Breeze (Standard Premium) - Rp 750.000", value: 750000 },
+  vip: { label: "Executive VIP (Deluxe AC) - Rp 1.000.000", value: 1000000 }
+};
+
 export function EditRoomModal({
   open,
   onClose,
@@ -48,6 +55,17 @@ export function EditRoomModal({
     onClose();
   };
 
+  const handleRateSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    if (val === "custom") return;
+    const selected = roomRates[val];
+    if (selected) {
+      setRate(selected.value);
+    }
+  };
+
+  const isCustomRate = !Object.values(roomRates).some((r) => r.value === rate);
+
   return (
     <Dialog open={open} onClose={onClose} title={`Pengaturan Kamar ${room.id}`}>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -59,9 +77,30 @@ export function EditRoomModal({
           <label className="text-xs font-bold uppercase text-foreground">Nomor WhatsApp Penghuni</label>
           <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Contoh: 081234567890" />
         </div>
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold uppercase text-foreground">Tarif Sewa Bulanan (Rp)</label>
-          <Input type="number" step="50000" value={rate} onChange={(e) => setRate(parseInt(e.target.value) || 0)} required />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase text-foreground">Tipe / Paket Kamar</label>
+            <select
+              value={isCustomRate ? "custom" : Object.keys(roomRates).find((k) => roomRates[k].value === rate) || "basic"}
+              onChange={handleRateSelectChange}
+              className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm font-medium focus:border-primary focus:outline-none"
+            >
+              {Object.entries(roomRates).map(([key, item]) => (
+                <option key={key} value={key}>{item.label}</option>
+              ))}
+              <option value="custom">Kustom (Ketik Manual)</option>
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold uppercase text-foreground">Tarif Bulanan (Rp)</label>
+            <Input
+              type="number"
+              step="50000"
+              value={rate}
+              onChange={(e) => setRate(parseInt(e.target.value) || 0)}
+              required
+            />
+          </div>
         </div>
         <div className="space-y-1.5">
           <label className="text-xs font-bold uppercase text-foreground">Tanggal Jatuh Tempo Setiap Bulan</label>
