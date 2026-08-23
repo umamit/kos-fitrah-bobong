@@ -6,3 +6,7 @@ node_modules/
 dist/
 scratch/
 
+# Environment Secrets
+.env
+.env.local
+.env.*.local
