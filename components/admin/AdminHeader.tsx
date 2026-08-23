@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Lock, Calendar, Layers } from "lucide-react";
+import { LogOut, Calendar, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function AdminHeader({ period, onPeriodChange, onLock }: {
@@ -38,8 +38,8 @@ export function AdminHeader({ period, onPeriodChange, onLock }: {
             />
           </div>
           <Button variant="outline" size="sm" onClick={onLock} className="gap-1.5 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors">
-            <Lock className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Kunci Sesi</span>
+            <LogOut className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Keluar</span>
           </Button>
         </div>
       </div>
