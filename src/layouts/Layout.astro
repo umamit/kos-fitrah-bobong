@@ -30,22 +30,22 @@ import '../styles/responsive.css';
   <title>{title}</title>
   <meta name="description" content={description}>
   <link rel="canonical" href="https://kosfitrah.uk/">
-  <link rel="icon" type="image/png" href="/assets/logo-symbol.png?v=2.0.1">
-  <link rel="apple-touch-icon" href="/assets/logo-symbol.png?v=2.0.1">
+  <link rel="icon" type="image/png" href="/assets/logo-symbol.png?v=2.0.2">
+  <link rel="apple-touch-icon" href="/assets/logo-symbol.png?v=2.0.2">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kosfitrah.uk/">
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
-  <meta property="og:image" content="https://kosfitrah.uk/assets/logo.png?v=2.0.1">
+  <meta property="og:image" content="https://kosfitrah.uk/assets/logo.png?v=2.0.2">
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://kosfitrah.uk/">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
-  <meta name="twitter:image" content="https://kosfitrah.uk/assets/logo.png?v=2.0.1">
+  <meta name="twitter:image" content="https://kosfitrah.uk/assets/logo.png?v=2.0.2">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,9 +69,9 @@ import '../styles/responsive.css';
 <body>
   <slot />
 
-  <script src="../lib/theme.js"></script>
-  <script src="../lib/navbar.js"></script>
-  <script src="../lib/calculator.js"></script>
-  <script src="../lib/faq.js"></script>
+  <script is:inline src="/theme.js?v=2.0.2"></script>
+  <script is:inline src="/navbar.js?v=2.0.2"></script>
+  <script is:inline src="/calculator.js?v=2.0.2"></script>
+  <script is:inline src="/faq.js?v=2.0.2"></script>
 </body>
 </html>
