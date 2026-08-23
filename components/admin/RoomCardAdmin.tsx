@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Edit2 } from "lucide-react";
+import { Plus, Settings, User, PhoneCall, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +38,7 @@ export function RoomCardAdmin({
       statusText = "Lunas";
       statusVariant = "success";
     } else if (paid > 0) {
-      statusText = "Dicicil";
+      statusText = `Dicicil (${percent}%)`;
       statusVariant = "warning";
     } else {
       statusText = "Belum Bayar";
@@ -47,38 +47,65 @@ export function RoomCardAdmin({
   }
 
   return (
-    <Card className="p-6 flex flex-col justify-between space-y-5 hover:shadow-lg hover:border-primary/40 transition-all">
+    <Card className="p-6 flex flex-col justify-between space-y-6 hover:shadow-xl hover:border-primary/40 transition-all border-border/80 group">
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-lg font-extrabold text-foreground">Kamar {room.id}</span>
+        {/* Card Header */}
+        <div className="flex justify-between items-center pb-3 border-b border-border/60">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+            <span className="text-base font-extrabold text-foreground tracking-tight">Kamar {room.id}</span>
+          </div>
           <Badge variant={statusVariant}>{statusText}</Badge>
         </div>
-        <div className="space-y-1">
-          <h4 className="font-bold text-foreground text-base">{room.occupied ? room.tenant : "Kamar Kosong"}</h4>
-          <p className="text-xs text-muted-foreground">
-            {room.occupied ? `Jatuh tempo tgl ${room.dueDay} • ${formatCurrency(room.rate)}/bln` : "Siap huni"}
-          </p>
+
+        {/* Tenant Body */}
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <h4 className="font-extrabold text-foreground text-base truncate">
+              {room.occupied ? room.tenant : "Kamar Siap Huni"}
+            </h4>
+          </div>
+
+          {room.occupied ? (
+            <div className="space-y-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <PhoneCall className="w-3.5 h-3.5 text-muted-foreground/70" />
+                <span>{room.phone || "Belum ada no WA"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" />
+                <span>Jatuh tempo tgl <strong>{room.dueDay}</strong> • {formatCurrency(room.rate)}/bln</span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">Unit kosong siap disewakan kapan saja.</p>
+          )}
         </div>
+
+        {/* Progress Tracker */}
         {room.occupied && (
-          <div className="space-y-2 bg-muted/60 p-3 rounded-xl border border-border">
-            <div className="flex justify-between text-xs font-semibold">
-              <span className="text-muted-foreground">Masuk: {formatCurrency(paid)}</span>
-              <span className="text-foreground">Sisa: {formatCurrency(rem)}</span>
+          <div className="space-y-2 bg-muted/60 p-3.5 rounded-xl border border-border/60">
+            <div className="flex justify-between text-xs font-bold">
+              <span className="text-emerald-600 dark:text-emerald-400">Masuk: {formatCurrency(paid)}</span>
+              <span className="text-muted-foreground">Sisa: {formatCurrency(rem)}</span>
             </div>
             <Progress value={percent} variant={percent < 100 && percent > 0 ? "warning" : "default"} />
           </div>
         )}
       </div>
+
+      {/* Card Action Buttons */}
       <div className="flex gap-2.5 pt-2">
         {room.occupied && (
-          <Button size="sm" onClick={() => onPay(room.id)} className="flex-1 gap-1.5">
+          <Button size="sm" onClick={() => onPay(room.id)} className="flex-1 gap-1.5 rounded-xl shadow-xs">
             <Plus className="w-3.5 h-3.5" />
-            Bayar / Cicil
+            + Cicilan
           </Button>
         )}
-        <Button variant="secondary" size="sm" onClick={() => onEdit(room.id)} className="flex-1 gap-1.5">
-          <Edit2 className="w-3.5 h-3.5" />
-          Edit
+        <Button variant="outline" size="sm" onClick={() => onEdit(room.id)} className="flex-1 gap-1.5 rounded-xl">
+          <Settings className="w-3.5 h-3.5 text-muted-foreground" />
+          Pengaturan
         </Button>
       </div>
     </Card>

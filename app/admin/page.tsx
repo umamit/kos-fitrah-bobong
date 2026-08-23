@@ -52,13 +52,8 @@ export default function AdminPage() {
         const { data: cloudRooms, error } = await supabase.from("rooms").select("*").order("id");
         if (!error && cloudRooms && cloudRooms.length > 0) {
           setRooms(cloudRooms.map((r: any) => ({
-            id: r.id,
-            type: r.type,
-            tenant: r.tenant || "",
-            phone: r.phone || "",
-            rate: Number(r.rate) || 600000,
-            dueDay: Number(r.due_day) || 1,
-            occupied: Boolean(r.occupied)
+            id: r.id, type: r.type, tenant: r.tenant || "", phone: r.phone || "",
+            rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied)
           })));
         } else {
           const seedData = defaultRooms.map((r) => ({
@@ -128,25 +123,35 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(5,150,105,0.08),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(11,15,25,0))]">
       <AdminHeader period={period} onPeriodChange={setPeriod} onLock={handleLogout} />
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <StatsOverview totalIncome={totalIncome} totalPending={totalPending} occupiedCount={occupiedRooms.length} />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms.map((room) => {
-            const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
-            return (
-              <RoomCardAdmin
-                key={room.id}
-                room={room}
-                paid={roomPaid}
-                onPay={() => setActivePayRoom(room)}
-                onEdit={() => setActiveEditRoom(room)}
-              />
-            );
-          })}
+        
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit 9 Kamar</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">Pantau status pelunasan cicilan bulanan dan data penyewa aktif</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {rooms.map((room) => {
+              const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
+              return (
+                <RoomCardAdmin
+                  key={room.id}
+                  room={room}
+                  paid={roomPaid}
+                  onPay={() => setActivePayRoom(room)}
+                  onEdit={() => setActiveEditRoom(room)}
+                />
+              );
+            })}
+          </div>
         </div>
       </main>
+
       <PaymentModal
         open={!!activePayRoom}
         onClose={() => setActivePayRoom(null)}
