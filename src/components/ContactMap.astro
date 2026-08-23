@@ -1,5 +1,5 @@
 ---
-// Location & SVG Route Map Component
+// Location & Interactive Google Maps Component
 ---
 <div class="bg-muted" id="kontak">
   <section class="section-container">
@@ -37,35 +37,29 @@
             <p class="text-hint text-muted">Hubungi via WhatsApp atau telepon langsung untuk survei unit kamar.</p>
           </div>
         </div>
+
+        <a href="https://maps.google.com/?q=Bobong,+Pulau+Taliabu" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-block">
+          📍 Buka Navigasi di Aplikasi Google Maps
+        </a>
       </div>
 
-      <!-- Vector Route Map -->
+      <!-- Interactive Google Maps Card -->
       <div class="map-visual-card">
         <div class="map-header">
-          <h4>Denah Panduan Lokasi</h4>
+          <h4>Google Maps Interaktif</h4>
           <span>Pusat Kota Bobong</span>
         </div>
-        <div class="map-body">
-          <svg class="custom-route-map" viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100%" height="100%" fill="var(--bg-muted)" rx="8"/>
-            <path d="M 50 180 Q 150 160 200 120 T 350 70" fill="none" stroke="var(--border)" stroke-width="14" stroke-linecap="round"/>
-            <path d="M 200 120 L 200 40" fill="none" stroke="var(--border)" stroke-width="10" stroke-linecap="round"/>
-            <path d="M 120 170 L 120 220" fill="none" stroke="var(--border)" stroke-width="8" stroke-linecap="round"/>
-            <path d="M 50 180 Q 150 160 200 120 T 350 70" fill="none" stroke="var(--primary-light)" stroke-width="4" stroke-dasharray="6,6"/>
-            
-            <circle cx="200" cy="40" r="10" fill="var(--primary)" />
-            <circle cx="200" cy="40" r="4" fill="#ffffff" />
-            <text x="220" y="45" fill="var(--text)" font-weight="700" font-size="13">Kos Fitrah</text>
-
-            <rect x="35" y="165" width="30" height="30" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="2"/>
-            <text x="75" y="185" fill="var(--text-muted)" font-size="11" font-weight="600">Pelabuhan</text>
-
-            <rect x="310" y="55" width="30" height="30" rx="4" fill="var(--bg-card)" stroke="var(--border)" stroke-width="2"/>
-            <text x="270" y="100" fill="var(--text-muted)" font-size="11" font-weight="600">Pusat Pasar</text>
-          </svg>
+        <div class="map-body-gmap">
+          <iframe 
+            src="https://maps.google.com/maps?q=Bobong,+Taliabu+Barat,+Pulau+Taliabu&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            class="gmap-iframe"
+            title="Lokasi Kos Fitrah di Google Maps"
+            loading="lazy"
+            allowfullscreen>
+          </iframe>
           <div class="map-notes">
             <span class="landmark-bullet"></span>
-            <p>Hanya 5 menit dari Pelabuhan Bobong dan dekat pusat pemerintahan Pulau Taliabu.</p>
+            <p>Hanya 5 menit dari Pelabuhan Bobong dan dekat pusat perkantoran Pulau Taliabu.</p>
           </div>
         </div>
       </div>

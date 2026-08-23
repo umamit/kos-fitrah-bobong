@@ -1,4 +1,4 @@
-/* ===== LOCATION & CONTACT ===== */
+/* ===== LOCATION & GOOGLE MAPS ===== */
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
@@ -8,7 +8,7 @@
 .contact-info-panel {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 28px;
 }
 
 .info-block {
@@ -74,26 +74,22 @@
   color: var(--primary);
 }
 
-.map-body {
-  padding: 24px;
+.map-body-gmap {
+  padding: 20px;
 }
 
-.custom-route-map {
+.gmap-iframe {
   width: 100%;
-  height: 250px;
-  border-radius: var(--radius-sm);
+  height: 280px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   display: block;
-}
-
-.custom-route-map text {
-  font-family: var(--font-sans);
 }
 
 .map-notes {
   display: flex;
   gap: 12px;
-  margin-top: 20px;
+  margin-top: 16px;
   align-items: flex-start;
 }
 
