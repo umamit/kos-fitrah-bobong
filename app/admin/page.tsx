@@ -7,6 +7,7 @@ import { RoomCardAdmin, type RoomAdminData } from "@/components/admin/RoomCardAd
 import { PaymentModal, type PaymentRecord } from "@/components/admin/PaymentModal";
 import { EditRoomModal } from "@/components/admin/EditRoomModal";
 import { LoginOverlay } from "@/components/admin/LoginOverlay";
+import { TransactionHistory } from "@/components/admin/TransactionHistory";
 import { supabase } from "@/lib/supabase/client";
 
 const defaultRooms: RoomAdminData[] = [
@@ -75,7 +76,7 @@ export default function AdminPage() {
 
       try {
         const { data: cloudPay, error } = await supabase
-          .from("payments").select("*").eq("period", period).order("created_at", { ascending: false });
+          .from("payments").select("*").eq("period", period).order("date", { ascending: false });
         if (!error && cloudPay) {
           setPayments(cloudPay.map((p: any) => ({
             id: p.id, roomId: p.room_id, amount: Number(p.amount), date: p.date, note: p.note || ""
@@ -134,26 +135,29 @@ export default function AdminPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <StatsOverview totalIncome={totalIncome} totalPending={totalPending} occupiedCount={occupiedRooms.length} />
         
-        <div>
-          <div className="flex justify-between items-center mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-2 space-y-6">
             <div>
               <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit 9 Kamar</h2>
               <p className="text-xs text-muted-foreground mt-0.5">Pantau status pelunasan cicilan bulanan dan data penyewa aktif</p>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {rooms.map((room) => {
+                const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
+                return (
+                  <RoomCardAdmin
+                    key={room.id}
+                    room={room}
+                    paid={roomPaid}
+                    onPay={() => setActivePayRoom(room)}
+                    onEdit={() => setActiveEditRoom(room)}
+                  />
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {rooms.map((room) => {
-              const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
-              return (
-                <RoomCardAdmin
-                  key={room.id}
-                  room={room}
-                  paid={roomPaid}
-                  onPay={() => setActivePayRoom(room)}
-                  onEdit={() => setActiveEditRoom(room)}
-                />
-              );
-            })}
+          <div className="lg:sticky lg:top-24">
+            <TransactionHistory payments={payments} rooms={rooms} />
           </div>
         </div>
       </main>
