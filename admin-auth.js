@@ -1,56 +1,59 @@
-// === Admin Security & PIN Authentication ===
-const ADMIN_PIN = '123456'; // Default PIN pengelola, bisa diubah oleh pengelola
-const AUTH_KEY = 'kosfitrah_admin_authenticated';
-
+// === Admin Authentication via Supabase Auth (Email & Password) ===
 function isUserAuthenticated() {
-  return sessionStorage.getItem(AUTH_KEY) === 'true';
-}
-
-function setAuthenticated(status) {
-  if (status) {
-    sessionStorage.setItem(AUTH_KEY, 'true');
-  } else {
-    sessionStorage.removeItem(AUTH_KEY);
-  }
+  return !!getAuthToken();
 }
 
 function initAdminAuth() {
-  const pinOverlay = document.getElementById('pin-overlay');
-  const pinForm = document.getElementById('pin-form');
-  const pinInput = document.getElementById('pin-input');
-  const pinError = document.getElementById('pin-error');
+  const authOverlay = document.getElementById('auth-overlay');
+  const authForm = document.getElementById('auth-form');
+  const emailInput = document.getElementById('auth-email');
+  const passwordInput = document.getElementById('auth-password');
+  const authError = document.getElementById('auth-error');
+  const loginSubmitBtn = document.getElementById('auth-submit-btn');
   const logoutBtn = document.getElementById('admin-logout-btn');
 
   if (isUserAuthenticated()) {
-    if (pinOverlay) pinOverlay.style.display = 'none';
+    if (authOverlay) authOverlay.style.display = 'none';
   } else {
-    if (pinOverlay) pinOverlay.style.display = 'flex';
-    if (pinInput) pinInput.focus();
+    if (authOverlay) authOverlay.style.display = 'flex';
+    if (emailInput) emailInput.focus();
   }
 
-  if (pinForm) {
-    pinForm.addEventListener('submit', (e) => {
+  if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const enteredPin = pinInput.value.trim();
-      if (enteredPin === ADMIN_PIN) {
-        setAuthenticated(true);
-        if (pinOverlay) pinOverlay.style.display = 'none';
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (authError) authError.style.display = 'none';
+      if (loginSubmitBtn) {
+        loginSubmitBtn.disabled = true;
+        loginSubmitBtn.textContent = 'Memverifikasi...';
+      }
+
+      try {
+        await supabaseSignIn(email, password);
+        if (authOverlay) authOverlay.style.display = 'none';
         if (typeof window.renderAdminDashboard === 'function') {
           window.renderAdminDashboard();
         }
-      } else {
-        if (pinError) {
-          pinError.textContent = 'PIN Salah. Silakan coba lagi.';
-          pinError.style.display = 'block';
+      } catch (err) {
+        if (authError) {
+          authError.textContent = err.message || 'Email atau password salah.';
+          authError.style.display = 'block';
         }
-        pinInput.value = '';
+      } finally {
+        if (loginSubmitBtn) {
+          loginSubmitBtn.disabled = false;
+          loginSubmitBtn.textContent = 'Masuk ke Dashboard';
+        }
       }
     });
   }
 
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      setAuthenticated(false);
+    logoutBtn.addEventListener('click', async () => {
+      await supabaseSignOut();
       window.location.reload();
     });
   }
