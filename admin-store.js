@@ -1,4 +1,4 @@
-// === Data Store & Persistence for 9 Rooms ===
+// === Data Store with Cloud Sync (Supabase + Local Fallback) ===
 const STORE_KEY = 'kosfitrah_rooms_data';
 
 const DEFAULT_ROOMS = [
@@ -19,26 +19,30 @@ function getRoomsData() {
     saveRoomsData(DEFAULT_ROOMS);
     return DEFAULT_ROOMS;
   }
-  try {
-    return JSON.parse(data);
-  } catch (e) {
-    return DEFAULT_ROOMS;
-  }
+  try { return JSON.parse(data); } catch (e) { return DEFAULT_ROOMS; }
 }
 
 function saveRoomsData(rooms) {
   localStorage.setItem(STORE_KEY, JSON.stringify(rooms));
+  // Background cloud sync
+  if (typeof supabaseFetch === 'function') {
+    rooms.forEach(r => {
+      supabaseFetch('rooms', {
+        method: 'POST',
+        prefer: 'resolution=merge-duplicates',
+        body: { id: r.id, type: r.type, rate: r.rate, tenant: r.tenant, phone: r.phone, due_day: r.dueDay, occupied: r.occupied }
+      });
+    });
+  }
 }
 
 function getPaymentsData(period) {
-  const key = `kosfitrah_payments_${period}`;
-  const data = localStorage.getItem(key);
+  const data = localStorage.getItem(`kosfitrah_payments_${period}`);
   return data ? JSON.parse(data) : [];
 }
 
 function savePaymentsData(period, payments) {
-  const key = `kosfitrah_payments_${period}`;
-  localStorage.setItem(key, JSON.stringify(payments));
+  localStorage.setItem(`kosfitrah_payments_${period}`, JSON.stringify(payments));
 }
 
 function addPayment(period, roomId, amount, note, date) {
@@ -52,6 +56,14 @@ function addPayment(period, roomId, amount, note, date) {
   };
   payments.push(newPayment);
   savePaymentsData(period, payments);
+
+  // Background cloud sync
+  if (typeof supabaseFetch === 'function') {
+    supabaseFetch('payments', {
+      method: 'POST',
+      body: { id: newPayment.id, room_id: newPayment.roomId, period, amount: newPayment.amount, note: newPayment.note, date: newPayment.date }
+    });
+  }
   return newPayment;
 }
 
@@ -59,4 +71,11 @@ function deletePayment(period, paymentId) {
   let payments = getPaymentsData(period);
   payments = payments.filter(p => p.id !== paymentId);
   savePaymentsData(period, payments);
+
+  if (typeof supabaseFetch === 'function') {
+    supabaseFetch('payments', {
+      method: 'DELETE',
+      query: `?id=eq.${paymentId}`
+    });
+  }
 }

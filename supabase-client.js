@@ -1,10 +1,9 @@
 // === Supabase Client & REST API Connector ===
 const SUPABASE_CONFIG = {
   url: 'https://cyfeithwpexfqdtdsoov.supabase.co',
-  anonKey: '' // Isi dengan anon key atau via LocalStorage / env setting
+  anonKey: 'sb_publishable_2YNUf2aUUr-nFlBBEOPjiA_bFFcySQV'
 };
 
-// Mengambil konfigurasi aktif (bisa disimpan di browser pengelola agar fleksibel)
 function getSupabaseConfig() {
   const savedKey = localStorage.getItem('kosfitrah_supabase_key');
   return {
@@ -13,14 +12,9 @@ function getSupabaseConfig() {
   };
 }
 
-function saveSupabaseKey(key) {
-  localStorage.setItem('kosfitrah_supabase_key', key);
-}
-
-// REST Client Helper untuk Supabase (Vanilla JS murni, tanpa dependensi besar)
 async function supabaseFetch(table, options = {}) {
   const { url, anonKey } = getSupabaseConfig();
-  if (!anonKey) return null; // Fallback ke LocalStorage jika belum disetel
+  if (!anonKey) return null;
 
   const endpoint = `${url}/rest/v1/${table}${options.query || ''}`;
   const headers = {
@@ -39,7 +33,7 @@ async function supabaseFetch(table, options = {}) {
     if (!res.ok) throw new Error(`Supabase error: ${res.statusText}`);
     return await res.json();
   } catch (err) {
-    console.warn('Supabase fetch error, fallback to local:', err);
+    console.warn('Supabase fetch notice, local sync active:', err);
     return null;
   }
 }
