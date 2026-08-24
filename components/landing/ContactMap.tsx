@@ -21,7 +21,7 @@ export function ContactMap() {
                 </div>
                 <div>
                   <h4 className="font-bold text-foreground text-base">Alamat Utama</h4>
-                  <p className="text-sm text-muted-foreground mt-1">Bobong, Kec. Taliabu Barat, Kabupaten Pulau Taliabu, Maluku Utara.</p>
+                  <p className="text-sm text-muted-foreground mt-1">Jl. TPU Bobong, KOMP Fangahu, Simpang empat Lahudia usman, Bobong, Taliabu Barat, Pulau Taliabu, Maluku Utara.</p>
                   <p className="text-xs text-muted-foreground mt-2">Akses jalan utama mudah dijangkau kendaraan roda dua maupun roda empat.</p>
                 </div>
               </div>
@@ -38,7 +38,7 @@ export function ContactMap() {
                 </div>
               </div>
             </Card>
-            <a href="https://maps.google.com/?q=Bobong,+Pulau+Taliabu" target="_blank" rel="noopener noreferrer" className="block">
+            <a href="https://maps.app.goo.gl/mraondCyX9je8oFW6" target="_blank" rel="noopener noreferrer" className="block">
               <Button variant="secondary" className="w-full gap-2">
                 <ExternalLink className="w-4 h-4" />
                 Buka Navigasi di Aplikasi Google Maps
@@ -48,11 +48,11 @@ export function ContactMap() {
           <Card className="overflow-hidden p-0 border border-border shadow-lg">
             <div className="p-4 bg-card border-b border-border flex justify-between items-center">
               <h4 className="font-bold text-sm text-foreground">Google Maps Interaktif</h4>
-              <span className="text-xs font-semibold text-primary">Pusat Kota Bobong</span>
+              <span className="text-xs font-semibold text-primary">Pin Lokasi Pas</span>
             </div>
             <div className="p-4 bg-muted/40">
               <iframe
-                src="https://maps.google.com/maps?q=Bobong,+Taliabu+Barat,+Pulau+Taliabu&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.390001!2d124.3773286!3d-1.9390001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2d82af43013c34e1%3A0xa70c1cd1c7ac249f!2sKOS%20FITRAH!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
                 className="w-full h-[280px] rounded-xl border border-border"
                 title="Google Maps Kos Fitrah"
                 loading="lazy"
