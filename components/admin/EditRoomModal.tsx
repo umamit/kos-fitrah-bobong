@@ -32,6 +32,7 @@ export function EditRoomModal({
   const [dueDay, setDueDay] = useState(1);
   const [occupied, setOccupied] = useState(false);
   const [debt, setDebt] = useState(0);
+  const [selectedType, setSelectedType] = useState("basic");
 
   useEffect(() => {
     if (room) {
@@ -41,6 +42,7 @@ export function EditRoomModal({
       setDueDay(room.dueDay || 1);
       setOccupied(room.occupied);
       setDebt(room.debt || 0);
+      setSelectedType(room.type || "basic");
     }
   }, [room]);
 
@@ -55,7 +57,8 @@ export function EditRoomModal({
       rate,
       dueDay,
       occupied,
-      debt
+      debt,
+      type: selectedType
     });
     onClose();
   };
@@ -69,6 +72,7 @@ export function EditRoomModal({
 
   const handleRateSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value;
+    setSelectedType(val);
     if (val === "custom") return;
     const selected = roomRates[val];
     if (selected) {
@@ -76,7 +80,7 @@ export function EditRoomModal({
     }
   };
 
-  const isCustomRate = !Object.values(roomRates).some((r) => r.value === rate);
+  const isCustomRate = selectedType === "custom" || !Object.values(roomRates).some((r) => r.value === rate);
 
   return (
     <Dialog open={open} onClose={onClose} title={`Pengaturan Kamar ${room.id}`}>
@@ -93,7 +97,7 @@ export function EditRoomModal({
           <div className="space-y-1.5">
             <label className="text-xs font-bold uppercase text-foreground">Tipe / Paket Kamar</label>
             <select
-              value={isCustomRate ? "custom" : Object.keys(roomRates).find((k) => roomRates[k].value === rate) || "basic"}
+              value={isCustomRate ? "custom" : selectedType}
               onChange={handleRateSelectChange}
               className="w-full h-10 rounded-md border border-border bg-background px-3 text-sm font-medium focus:border-primary focus:outline-none"
             >
@@ -109,7 +113,12 @@ export function EditRoomModal({
               type="number"
               step="50000"
               value={rate}
-              onChange={(e) => setRate(parseInt(e.target.value) || 0)}
+              onChange={(e) => {
+                const val = parseInt(e.target.value) || 0;
+                setRate(val);
+                const matchedType = Object.keys(roomRates).find((k) => roomRates[k].value === val);
+                setSelectedType(matchedType || "custom");
+              }}
               required
             />
           </div>
