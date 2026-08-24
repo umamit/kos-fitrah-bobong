@@ -48,6 +48,31 @@ export function PaymentModal({
   const totalTarget = room.rate + debtVal;
   const remaining = Math.max(0, totalTarget - totalPaid);
 
+  const getKwitansiText = (amountPaid: number, payDate: string, payNote: string, finalPaid: number) => {
+    const finalRemaining = Math.max(0, totalTarget - finalPaid);
+    const statusStr = finalRemaining === 0 ? "LUNAS (Lunas)" : `BELUM LUNAS (Sisa: ${formatCurrency(finalRemaining)})`;
+    const noteStr = payNote ? `\nCatatan: ${payNote}` : "";
+
+    return `*BUKTI PEMBAYARAN KOS FITRAH*
+============================
+Kamar: *No. ${room.id}*
+Penyewa: *${room.tenant}*
+Periode: *${period}*
+
+*Rincian Transaksi:*
+• Tanggal Bayar: ${payDate}
+• Jumlah Masuk: *${formatCurrency(amountPaid)}*${noteStr}
+
+*Ringkasan Kas Kamar:*
+• Tarif Kamar: ${formatCurrency(room.rate)} / bulan
+• Tunggakan Lalu: ${formatCurrency(debtVal)}
+• Total Tagihan: ${formatCurrency(totalTarget)}
+• Total Sudah Dibayar: ${formatCurrency(finalPaid)}
+• Status Tagihan: *${statusStr}*
+============================
+Bukti pembayaran ini sah dikeluarkan oleh pengelola Kos Fitrah Bobong. Terima kasih atas kerja samanya.`;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const val = parseInt(amount);
@@ -60,29 +85,7 @@ export function PaymentModal({
 
     if (sendWa) {
       const currentPaid = totalPaid + val;
-      const currentRemaining = Math.max(0, totalTarget - currentPaid);
-      const statusStr = currentRemaining === 0 ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(currentRemaining)})`;
-      const noteStr = note ? `\n• Keterangan: ${note}` : "";
-
-      const msg = `*KWITANSI PEMBAYARAN KOS FITRAH*
-============================
-Kepada Yth: *${room.tenant}*
-Kamar: *No. ${room.id}*
-Periode: *${period}*
-
-*RINCIAN PEMBAYARAN:*
-• Tanggal: ${date}
-• Jumlah Masuk: *${formatCurrency(val)}*${noteStr}
-
-*STATUS TAGIHAN:*
-• Tarif Kamar: ${formatCurrency(room.rate)} / bulan
-• Tunggakan Lalu: ${formatCurrency(debtVal)}
-• Total Harus Dibayar: ${formatCurrency(totalTarget)}
-• Total Sudah Masuk: ${formatCurrency(currentPaid)}
-• Status: *${statusStr}*
-============================
-Terima kasih atas pembayaran Anda.`;
-
+      const msg = getKwitansiText(val, date, note, currentPaid);
       const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
     }
@@ -100,7 +103,6 @@ Terima kasih atas pembayaran Anda.`;
   return (
     <Dialog open={open} onClose={() => { setSuccessMsg(""); onClose(); }} title={`Pembukuan Kamar ${room.id}`}>
       <div className="space-y-6">
-        {/* Info Box */}
         <div className="grid grid-cols-3 gap-2 p-4 rounded-xl bg-muted border border-border text-center">
           <div>
             <span className="text-[10px] font-bold uppercase text-muted-foreground">Sudah Bayar</span>
@@ -163,24 +165,7 @@ Terima kasih atas pembayaran Anda.`;
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Button variant="secondary" size="sm" onClick={() => {
-                      const noteStr = p.note ? `\n• Keterangan: ${p.note}` : "";
-                      const msg = `*KWITANSI PEMBAYARAN KOS FITRAH*
-============================
-Kepada Yth: *${room.tenant}*
-Kamar: *No. ${room.id}*
-Periode: *${period}*
-
-*RINCIAN PEMBAYARAN:*
-• Tanggal: ${p.date}
-• Jumlah Masuk: *${formatCurrency(p.amount)}*${noteStr}
-
-*STATUS TAGIHAN:*
-• Tarif Kamar: ${formatCurrency(room.rate)} / bulan
-• Tunggakan Lalu: ${formatCurrency(debtVal)}
-• Total Sudah Masuk: ${formatCurrency(totalPaid)}
-• Status: *${totalPaid >= totalTarget ? "LUNAS" : `BELUM LUNAS (Sisa: ${formatCurrency(remaining)})`}*
-============================
-Terima kasih atas pembayaran Anda.`;
+                      const msg = getKwitansiText(p.amount, p.date, p.note, totalPaid);
                       const phone = room.phone.replace(/[^0-9]/g, "").replace(/^0/, "62");
                       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
                     }} className="p-1.5 h-auto">
