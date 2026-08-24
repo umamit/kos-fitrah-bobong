@@ -10,18 +10,6 @@ import { LoginOverlay } from "@/components/admin/LoginOverlay";
 import { TransactionHistory } from "@/components/admin/TransactionHistory";
 import { supabase } from "@/lib/supabase/client";
 
-const defaultRooms: RoomAdminData[] = [
-  { id: "01", type: "basic", tenant: "", phone: "", rate: 600000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "02", type: "basic", tenant: "", phone: "", rate: 600000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "03", type: "comfort", tenant: "", phone: "", rate: 700000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "04", type: "comfort", tenant: "", phone: "", rate: 700000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "05", type: "breeze", tenant: "", phone: "", rate: 750000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "06", type: "breeze", tenant: "", phone: "", rate: 750000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "07", type: "vip", tenant: "", phone: "", rate: 1000000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "08", type: "vip", tenant: "", phone: "", rate: 1000000, dueDay: 1, occupied: false, debt: 0 },
-  { id: "09", type: "vip", tenant: "", phone: "", rate: 1000000, dueDay: 1, occupied: false, debt: 0 }
-];
-
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [period, setPeriod] = useState(() => {
@@ -29,10 +17,11 @@ export default function AdminPage() {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
   });
 
-  const [rooms, setRooms] = useState<RoomAdminData[]>(defaultRooms);
+  const [rooms, setRooms] = useState<RoomAdminData[]>([]);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [activePayRoom, setActivePayRoom] = useState<RoomAdminData | null>(null);
   const [activeEditRoom, setActiveEditRoom] = useState<RoomAdminData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -49,28 +38,15 @@ export default function AdminPage() {
   useEffect(() => {
     if (!isAuthenticated) return;
     const loadData = async () => {
+      setLoading(true);
       try {
         const { data: cloudRooms, error } = await supabase.from("rooms").select("*").order("id");
-        if (!error && cloudRooms && cloudRooms.length > 0) {
+        if (!error && cloudRooms) {
           setRooms(cloudRooms.map((r: any) => ({
             id: r.id, type: r.type, tenant: r.tenant || "", phone: r.phone || "",
             rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied),
             debt: Number(r.debt) || 0
           })));
-        } else {
-          const seedData = defaultRooms.map((r) => ({
-            id: r.id, type: r.type, tenant: r.tenant, phone: r.phone,
-            rate: r.rate, due_day: r.dueDay, occupied: r.occupied, debt: r.debt || 0
-          }));
-          await supabase.from("rooms").upsert(seedData);
-          const { data: refetched } = await supabase.from("rooms").select("*").order("id");
-          if (refetched) {
-            setRooms(refetched.map((r: any) => ({
-              id: r.id, type: r.type, tenant: r.tenant || "", phone: r.phone || "",
-              rate: Number(r.rate) || 600000, dueDay: Number(r.due_day) || 1, occupied: Boolean(r.occupied),
-              debt: Number(r.debt) || 0
-            })));
-          }
         }
       } catch (e) {}
 
@@ -86,6 +62,8 @@ export default function AdminPage() {
         }
       } catch (e) {
         setPayments([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -129,37 +107,49 @@ export default function AdminPage() {
   const totalTarget = occupiedRooms.reduce((acc, r) => acc + r.rate + (r.debt || 0), 0);
   const totalPending = Math.max(0, totalTarget - totalIncome);
 
+  if (isAuthenticated === null) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-sm font-semibold text-muted-foreground">Memverifikasi keamanan sesi...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginOverlay onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(5,150,105,0.08),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(11,15,25,0))]">
       <AdminHeader period={period} onPeriodChange={setPeriod} onLock={handleLogout} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <StatsOverview totalIncome={totalIncome} totalPending={totalPending} occupiedCount={occupiedRooms.length} />
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          <div className="lg:col-span-2 space-y-6">
-            <div>
-              <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit 9 Kamar</h2>
-              <p className="text-xs text-muted-foreground mt-0.5">Pantau status pelunasan cicilan bulanan dan data penyewa aktif</p>
+        {loading ? (
+          <div className="py-20 text-center text-sm text-muted-foreground font-semibold">Mengambil data langsung dari Supabase...</div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <div className="lg:col-span-2 space-y-6">
+              <div>
+                <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit 9 Kamar</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Pantau status pelunasan cicilan bulanan dan data penyewa aktif</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {rooms.map((room) => {
+                  const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
+                  return (
+                    <RoomCardAdmin
+                      key={room.id}
+                      room={room}
+                      paid={roomPaid}
+                      onPay={() => setActivePayRoom(room)}
+                      onEdit={() => setActiveEditRoom(room)}
+                    />
+                  );
+                })}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {rooms.map((room) => {
-                const roomPaid = payments.filter((p) => p.roomId === room.id).reduce((acc, p) => acc + p.amount, 0);
-                return (
-                  <RoomCardAdmin
-                    key={room.id}
-                    room={room}
-                    paid={roomPaid}
-                    onPay={() => setActivePayRoom(room)}
-                    onEdit={() => setActiveEditRoom(room)}
-                  />
-                );
-              })}
+            <div className="lg:sticky lg:top-24">
+              <TransactionHistory payments={payments} rooms={rooms} />
             </div>
           </div>
-          <div className="lg:sticky lg:top-24">
-            <TransactionHistory payments={payments} rooms={rooms} />
-          </div>
-        </div>
+        )}
       </main>
 
       <PaymentModal
