@@ -6,8 +6,11 @@ import { StatsOverview } from "@/components/admin/StatsOverview";
 import { RoomCardAdmin, type RoomAdminData } from "@/components/admin/RoomCardAdmin";
 import { PaymentModal, type PaymentRecord } from "@/components/admin/PaymentModal";
 import { EditRoomModal } from "@/components/admin/EditRoomModal";
+import { AddRoomModal } from "@/components/admin/AddRoomModal";
 import { LoginOverlay } from "@/components/admin/LoginOverlay";
 import { TransactionHistory } from "@/components/admin/TransactionHistory";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 export default function AdminPage() {
@@ -21,6 +24,7 @@ export default function AdminPage() {
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [activePayRoom, setActivePayRoom] = useState<RoomAdminData | null>(null);
   const [activeEditRoom, setActiveEditRoom] = useState<RoomAdminData | null>(null);
+  const [openAddModal, setOpenAddModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,6 +79,24 @@ export default function AdminPage() {
     setIsAuthenticated(false);
   };
 
+  const handleAddRoom = async (id: string, type: string, rate: number, dueDay: number) => {
+    const newRoom: RoomAdminData = { id, type, rate, dueDay, tenant: "", phone: "", occupied: false, debt: 0 };
+    setRooms([...rooms, newRoom].sort((a, b) => a.id.localeCompare(b.id)));
+    try {
+      await supabase.from("rooms").insert({
+        id, type, rate, due_day: dueDay, tenant: "", phone: "", occupied: false, debt: 0
+      });
+    } catch (e) {}
+  };
+
+  const handleDeleteRoom = async (id: string) => {
+    setRooms(rooms.filter((r) => r.id !== id));
+    try {
+      await supabase.from("rooms").delete().eq("id", id);
+      await supabase.from("payments").delete().eq("room_id", id);
+    } catch (e) {}
+  };
+
   const handleSaveRooms = async (updated: RoomAdminData) => {
     setRooms(rooms.map((r) => (r.id === updated.id ? updated : r)));
     try {
@@ -126,9 +148,15 @@ export default function AdminPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             <div className="lg:col-span-2 space-y-6">
-              <div>
-                <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit 9 Kamar</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Pantau status pelunasan cicilan bulanan dan data penyewa aktif</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-xl font-extrabold text-foreground tracking-tight">Status Unit Kamar</h2>
+                  <p className="text-xs text-muted-foreground mt-0.5 font-medium">Jumlah terdaftar: {rooms.length} Kamar</p>
+                </div>
+                <Button onClick={() => setOpenAddModal(true)} size="sm" className="gap-1.5 rounded-xl">
+                  <Plus className="w-4 h-4" />
+                  Tambah Kamar
+                </Button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {rooms.map((room) => {
@@ -166,6 +194,12 @@ export default function AdminPage() {
         onClose={() => setActiveEditRoom(null)}
         room={activeEditRoom}
         onSave={handleSaveRooms}
+        onDelete={handleDeleteRoom}
+      />
+      <AddRoomModal
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+        onAdd={handleAddRoom}
       />
     </div>
   );

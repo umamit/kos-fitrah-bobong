@@ -17,12 +17,14 @@ export function EditRoomModal({
   open,
   onClose,
   room,
-  onSave
+  onSave,
+  onDelete
 }: {
   open: boolean;
   onClose: () => void;
   room: RoomAdminData | null;
   onSave: (updated: RoomAdminData) => void;
+  onDelete: (id: string) => void;
 }) {
   const [tenant, setTenant] = useState("");
   const [phone, setPhone] = useState("");
@@ -56,6 +58,13 @@ export function EditRoomModal({
       debt
     });
     onClose();
+  };
+
+  const handleDelete = () => {
+    if (confirm(`Apakah Anda yakin ingin menghapus Kamar ${room.id} secara permanen dari sistem? Semua data terkait kamar ini akan hilang.`)) {
+      onDelete(room.id);
+      onClose();
+    }
   };
 
   const handleRateSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -133,7 +142,14 @@ export function EditRoomModal({
             Kamar sedang terisi / berpenghuni
           </label>
         </div>
-        <Button type="submit" className="w-full">Simpan Perubahan</Button>
+        <div className="flex gap-3 pt-2">
+          <Button type="button" variant="danger" onClick={handleDelete} className="flex-1">
+            Hapus Kamar
+          </Button>
+          <Button type="submit" className="flex-2">
+            Simpan Perubahan
+          </Button>
+        </div>
       </form>
     </Dialog>
   );
