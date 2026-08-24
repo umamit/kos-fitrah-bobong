@@ -11,6 +11,8 @@ export function TransactionHistory({
   payments: PaymentRecord[];
   rooms: RoomAdminData[];
 }) {
+  const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+
   return (
     <Card className="p-6 border border-border/80 shadow-xs space-y-4">
       <div>
@@ -55,6 +57,13 @@ export function TransactionHistory({
           </tbody>
         </table>
       </div>
+
+      {payments.length > 0 && (
+        <div className="pt-4 border-t border-border/80 flex items-center justify-between text-xs font-bold bg-muted/30 p-2.5 rounded-xl border border-border/40">
+          <span className="text-muted-foreground">Total: {payments.length} Transaksi</span>
+          <span className="text-emerald-600 dark:text-emerald-400">{formatCurrency(totalAmount)}</span>
+        </div>
+      )}
     </Card>
   );
 }
