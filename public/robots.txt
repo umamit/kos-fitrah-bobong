@@ -1,14 +1,18 @@
 User-agent: *
 Allow: /
 
-# Blokir bot audit SEO agresif untuk menghemat bandwidth Vercel gratis
+# Block aggressive SEO bots to save Vercel free tier bandwidth
 User-agent: AhrefsBot
+Disallow: /
 User-agent: MJ12bot
+Disallow: /
 User-agent: SemrushBot
+Disallow: /
 User-agent: PetalBot
+Disallow: /
 User-agent: DotBot
+Disallow: /
 User-agent: Rogerbot
 Disallow: /
 
-# Sampaikan lokasi sitemap ke mesin pencari
 Sitemap: https://kosfitrah.uk/sitemap.xml
