@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -42,6 +42,12 @@ export function Navbar() {
           <Button variant="ghost" size="sm" onClick={toggleTheme} aria-label="Ganti Tema" className="p-2 rounded-full">
             {theme === "dark" ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
           </Button>
+          <Link href="/admin/">
+            <Button variant="outline" size="sm" className="gap-1.5 rounded-xl border-border/80 hover:bg-primary-light hover:text-primary transition-colors">
+              <Lock className="w-3.5 h-3.5" />
+              <span>Login Admin</span>
+            </Button>
+          </Link>
           <Link href="#kalkulator" className="hidden sm:inline-flex">
             <Button size="sm">Pesan Kamar</Button>
           </Link>
@@ -58,6 +64,10 @@ export function Navbar() {
           <Link href="#faq" onClick={() => setMenuOpen(false)} className="block py-1 hover:text-primary">FAQ</Link>
           <Link href="#kalkulator" onClick={() => setMenuOpen(false)} className="block py-1 hover:text-primary">Estimasi Biaya</Link>
           <Link href="#kontak" onClick={() => setMenuOpen(false)} className="block py-1 hover:text-primary">Lokasi</Link>
+          <Link href="/admin/" onClick={() => setMenuOpen(false)} className="block py-1 text-primary flex items-center gap-1.5">
+            <Lock className="w-3.5 h-3.5" />
+            <span>Login Admin</span>
+          </Link>
         </div>
       )}
     </nav>
